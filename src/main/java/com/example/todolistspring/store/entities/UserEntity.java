@@ -122,4 +122,36 @@ public class UserEntity extends BasicEntity implements UserDetails {
     public void setRoles(Set<RoleEntity> roles) {
         this.roles = roles;
     }
+
+    /**
+     * Получить задания
+     * @return задания
+     */
+    public List<TaskEntity> getTasks() {
+        return tasks;
+    }
+
+    /**
+     * Установить задания
+     * @param tasks задания
+     */
+    public void setTasks(List<TaskEntity> tasks) {
+        this.tasks = tasks;
+    }
+
+    /**
+     * Получить отчеты
+     * @return отчеты
+     */
+    public List<ReportEntity> getReports() {
+        return reports;
+    }
+
+    /**
+     * Установить отчеты
+     * @param reports
+     */
+    public void setReports(List<ReportEntity> reports) {
+        this.reports = reports;
+    }
 }
