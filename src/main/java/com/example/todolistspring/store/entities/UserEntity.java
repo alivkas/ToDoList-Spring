@@ -56,7 +56,7 @@ public class UserEntity extends BasicEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return roles;
     }
 
     /**
@@ -64,7 +64,7 @@ public class UserEntity extends BasicEntity implements UserDetails {
      * @return пароль
      */
     public String getPassword() {
-        return null;
+        return password;
     }
 
     /**
@@ -80,7 +80,7 @@ public class UserEntity extends BasicEntity implements UserDetails {
      * @return имя пользователя
      */
     public String getUsername() {
-        return null;
+        return username;
     }
 
     /**

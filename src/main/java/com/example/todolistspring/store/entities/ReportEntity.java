@@ -41,6 +41,26 @@ public class ReportEntity extends BasicEntity {
     private Set<TaskEntity> overdueTasks = new HashSet<>();
 
     /**
+     * Конструктор инициализации
+     */
+    public ReportEntity() {
+    }
+
+    /**
+     * Конструктор создания сущности
+     * @param name название
+     * @param startTime начало времени
+     * @param endTime конец времени
+     */
+    public ReportEntity(String name,
+                        LocalDateTime startTime,
+                        LocalDateTime endTime) {
+        this.name = name;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    /**
      * Получить название
      * @return название
      */
