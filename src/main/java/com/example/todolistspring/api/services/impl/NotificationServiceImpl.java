@@ -1,0 +1,51 @@
+package com.example.todolistspring.api.services.impl;
+
+import com.example.todolistspring.api.services.impl.interfaces.NotificationService;
+import com.example.todolistspring.store.entities.TaskEntity;
+import com.example.todolistspring.store.repositories.TaskRepository;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Service
+public class NotificationServiceImpl implements NotificationService {
+
+    private final TaskRepository taskRepository;
+    private final EmailServiceImpl emailServiceImpl;
+
+    public NotificationServiceImpl(TaskRepository taskRepository, EmailServiceImpl emailServiceImpl) {
+        this.taskRepository = taskRepository;
+        this.emailServiceImpl = emailServiceImpl;
+    }
+
+//    Реализация в консоль
+//    @Scheduled(cron = "0 0 * * * *")
+//    @Override
+//    public void sendDeadlineNotification() {
+//        List<TaskEntity> tasks = taskRepository.findAll();
+//        tasks.stream()
+//                .filter(task -> task.getDeadline() != null &&
+//                        LocalDateTime.now().isAfter(task.getDeadline().minusHours(1)))
+//                .forEach(task -> {
+//                    System.out.println("Напоминание: Задача \"" + task.getTitle() + "\" скоро истекает!");
+//                });
+//    }
+
+    @Scheduled(cron = "0 0 * * * *")
+    @Override
+    public void sendDeadlineNotification() {
+        List<TaskEntity> tasks = taskRepository.findAll();
+        tasks.stream()
+                .filter(task -> task.getDeadline() != null &&
+                        LocalDateTime.now().isAfter(task.getDeadline().minusHours(1)))
+                .forEach(task -> {
+                    String email = task.getUser().getEmail();
+                    String subject = "Напоминание о дедлайне задачи";
+                    String text = "Задача \"" + task.getTitle() + "\" скоро истекает!";
+                    emailServiceImpl.sendSimpleMessage(email, subject, text);
+                });
+    }
+
+}

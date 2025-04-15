@@ -18,16 +18,23 @@ public class TaskEntity extends BasicEntity {
 
     @Column(name = "title")
     private String title;
+
     @Column(name = "description")
     private String description;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private TaskStatus status;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "priority")
     private TaskPriority priority;
+
+    @Column(name = "deadline")
+    private LocalDateTime deadline;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -212,5 +219,23 @@ public class TaskEntity extends BasicEntity {
      */
     public void setProject(ProjectEntity project) {
         this.project = project;
+    }
+
+    /**
+     * Получить дату и время дедлайна задачи
+     *
+     * @return дата и время, к которому должна быть выполнена задача, или null, если дедлайн не установлен
+     */
+    public LocalDateTime getDeadline() {
+        return deadline;
+    }
+
+    /**
+     * Установить дату и время дедлайна задачи
+     *
+     * @param deadline дата и время, к которому должна быть выполнена задача
+     */
+    public void setDeadline(LocalDateTime deadline) {
+        this.deadline = deadline;
     }
 }
