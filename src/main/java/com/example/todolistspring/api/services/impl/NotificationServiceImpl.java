@@ -20,19 +20,6 @@ public class NotificationServiceImpl implements NotificationService {
         this.emailServiceImpl = emailServiceImpl;
     }
 
-//    Реализация в консоль
-//    @Scheduled(cron = "0 0 * * * *")
-//    @Override
-//    public void sendDeadlineNotification() {
-//        List<TaskEntity> tasks = taskRepository.findAll();
-//        tasks.stream()
-//                .filter(task -> task.getDeadline() != null &&
-//                        LocalDateTime.now().isAfter(task.getDeadline().minusHours(1)))
-//                .forEach(task -> {
-//                    System.out.println("Напоминание: Задача \"" + task.getTitle() + "\" скоро истекает!");
-//                });
-//    }
-
     @Scheduled(cron = "0 0 * * * *")
     @Override
     public void sendDeadlineNotification() {
