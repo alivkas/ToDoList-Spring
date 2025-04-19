@@ -10,7 +10,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 /**
  * Маппер комментариев
  */
-@Mapper(componentModel = "spring", uses = TaskMapper.class,
+@Mapper(componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface CommentMapper {
 
@@ -19,7 +19,7 @@ public interface CommentMapper {
      * @param entity сущность
      * @return дто
      */
-    @Mapping(target = "taskDto", source = "task")
+    @Mapping(target = "taskId", source = "task.id")
     CommentDto toDto(CommentEntity entity);
 
     /**
@@ -27,7 +27,6 @@ public interface CommentMapper {
      * @param dto дто
      * @return сущность
      */
-    @Mapping(target = "task", source = "taskDto")
     CommentEntity toEntity(CommentDto dto);
 
     /**
@@ -35,6 +34,5 @@ public interface CommentMapper {
      * @param dto дто
      * @param entity сущность
      */
-    @Mapping(target = "task", source = "taskDto")
     void updateEntity(CommentDto dto, @MappingTarget CommentEntity entity);
 }

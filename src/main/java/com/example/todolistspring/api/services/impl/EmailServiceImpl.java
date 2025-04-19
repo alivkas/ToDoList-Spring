@@ -1,6 +1,6 @@
 package com.example.todolistspring.api.services.impl;
 
-import com.example.todolistspring.api.services.impl.interfaces.EmailService;
+import com.example.todolistspring.api.services.interfaces.EmailService;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;

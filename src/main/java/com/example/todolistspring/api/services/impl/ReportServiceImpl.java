@@ -1,7 +1,7 @@
 package com.example.todolistspring.api.services.impl;
 
 import com.example.todolistspring.api.dto.ReportDto;
-import com.example.todolistspring.api.services.impl.interfaces.ReportService;
+import com.example.todolistspring.api.services.interfaces.ReportService;
 import com.example.todolistspring.mapper.ReportMapper;
 import com.example.todolistspring.store.entities.ReportEntity;
 import com.example.todolistspring.store.entities.TaskEntity;
@@ -31,7 +31,7 @@ public class ReportServiceImpl implements ReportService {
         List<TaskEntity> completedTasks = taskRepository.findCompletedTasksBetween(startDate, endDate);
         List<TaskEntity> overdueTasks = taskRepository.findOverdueTasksBetween(startDate, endDate);
 
-        ReportEntity report = new ReportEntity("Отчет", startDate,endDate);
+        ReportEntity report = new ReportEntity("Отчет", startDate, endDate);
         report.setCompletedTasks(new HashSet<>(completedTasks));
         report.setOverdueTasks(new HashSet<>(overdueTasks));
 

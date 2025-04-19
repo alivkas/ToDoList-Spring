@@ -10,7 +10,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 /**
  * Маппер проекта
  */
-@Mapper(componentModel = "spring", uses = TaskMapper.class,
+@Mapper(componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ProjectMapper {
 
@@ -19,7 +19,6 @@ public interface ProjectMapper {
      * @param dto дто
      * @return сущность
      */
-    @Mapping(target = "task", source = "taskDto")
     ProjectEntity toEntity(ProjectDto dto);
 
     /**
@@ -27,7 +26,7 @@ public interface ProjectMapper {
      * @param entity сущность
      * @return дто
      */
-    @Mapping(target = "taskDto", source = "task")
+    @Mapping(target = "taskId", source = "task.id")
     ProjectDto toDto(ProjectEntity entity);
 
     /**
@@ -35,6 +34,5 @@ public interface ProjectMapper {
      * @param dto дто
      * @param entity сущность
      */
-    @Mapping(target = "task", source = "taskDto")
     void updateEntity(ProjectDto dto, @MappingTarget ProjectEntity entity);
 }

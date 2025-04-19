@@ -12,7 +12,7 @@ import java.util.Set;
  * @param name название
  * @param startTime начало времени
  * @param endTime конец времени
- * @param userDto жто пользователя
+ * @param userId id пользователя
  * @param completedTasksDtos множество дто выполненных задач
  * @param overdueTasksDtos множество дто просроченных задач
  */
@@ -22,7 +22,7 @@ public record ReportDto(@Size(max = 255, message = "Максимальная д�
                         String name,
                         LocalDateTime startTime,
                         LocalDateTime endTime,
-                        UserDto userDto,
+                        Long userId,
                         Set<TaskDto> completedTasksDtos,
                         Set<TaskDto> overdueTasksDtos) {
 }

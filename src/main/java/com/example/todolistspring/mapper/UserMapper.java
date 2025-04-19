@@ -11,8 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 /**
  * Маппер пользователей
  */
-@Mapper(componentModel = "spring",
-        uses = {TaskMapper.class, ReportMapper.class},
+@Mapper(componentModel = "spring", uses = {TaskMapper.class, ReportMapper.class},
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserMapper {
 

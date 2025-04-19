@@ -10,12 +10,12 @@ import java.time.LocalDateTime;
  * Дто комментария
  * @param text текст
  * @param createdAt дата создания
- * @param taskDto дто задания
+ * @param taskId id задания
  */
 public record CommentDto(@Size(max = 1000, message = "максимальная длина - 1000 символов")
                          @NotBlank
                          @NotEmpty
                          String text,
                          LocalDateTime createdAt,
-                         TaskDto taskDto) {
+                         Long taskId) {
 }

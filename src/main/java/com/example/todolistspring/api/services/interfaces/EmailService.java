@@ -1,4 +1,4 @@
-package com.example.todolistspring.api.services.impl.interfaces;
+package com.example.todolistspring.api.services.interfaces;
 
 /**
  * Интерфейс сервиса для отправки email-сообщений

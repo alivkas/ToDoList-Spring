@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
  * Дто проекта
  * @param name название
  * @param description описание
- * @param taskDto дто задания
+ * @param taskId id задания
  */
 public record ProjectDto(@Size(max = 255, message = "Максимальная длина - 255 символов")
                          @NotBlank
@@ -18,5 +18,5 @@ public record ProjectDto(@Size(max = 255, message = "Максимальная д
                          @NotBlank
                          @NotEmpty
                          String description,
-                         TaskDto taskDto) {
+                         Long taskId) {
 }

@@ -11,7 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
  * Маппер заданий
  */
 @Mapper(componentModel = "spring",
-        uses = {UserMapper.class, TagMapper.class, CommentMapper.class, ProjectMapper.class},
+        uses = {TagMapper.class},
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface TaskMapper {
 
@@ -20,10 +20,7 @@ public interface TaskMapper {
      * @param dto дто
      * @return сущность
      */
-    @Mapping(target = "user", source = "userDto")
     @Mapping(target = "tags", source = "tagDtos")
-    @Mapping(target = "comment", source = "commentDto")
-    @Mapping(target = "project", source = "projectDto")
     TaskEntity toEntity(TaskDto dto);
 
     /**
@@ -31,10 +28,10 @@ public interface TaskMapper {
      * @param entity сущность
      * @return дто
      */
-    @Mapping(target = "userDto", source = "user")
+    @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "tagDtos", source = "tags")
-    @Mapping(target = "commentDto", source = "comment")
-    @Mapping(target = "projectDto", source = "project")
+    @Mapping(target = "commentId", source = "comment.id")
+    @Mapping(target = "projectId", source = "project.id")
     TaskDto toDto(TaskEntity entity);
 
     /**
@@ -42,9 +39,6 @@ public interface TaskMapper {
      * @param dto дто
      * @param entity сущность
      */
-    @Mapping(target = "user", source = "userDto")
     @Mapping(target = "tags", source = "tagDtos")
-    @Mapping(target = "comment", source = "commentDto")
-    @Mapping(target = "project", source = "projectDto")
     void updateEntity(TaskDto dto, @MappingTarget TaskEntity entity);
 }

@@ -1,7 +1,7 @@
 package com.example.todolistspring.api.services.impl;
 
 import com.example.todolistspring.api.dto.TaskDto;
-import com.example.todolistspring.api.services.impl.interfaces.TaskService;
+import com.example.todolistspring.api.services.interfaces.TaskService;
 import com.example.todolistspring.mapper.TaskMapper;
 import com.example.todolistspring.store.entities.TaskEntity;
 import com.example.todolistspring.store.repositories.TaskRepository;

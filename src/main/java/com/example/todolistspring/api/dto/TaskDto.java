@@ -16,10 +16,10 @@ import java.util.Set;
  * @param createdAt время создания
  * @param status статус
  * @param priority приоритет
- * @param userDto дто пользователя
+ * @param userId id пользователя
  * @param tagDtos множество дто тегов
- * @param commentDto дто комментариев
- * @param projectDto дто проекта
+ * @param commentId id комментариев
+ * @param projectId id проекта
  */
 public record TaskDto(@Size(max = 255, message = "Максимальная длина - 255 символов")
                       @NotBlank
@@ -32,8 +32,8 @@ public record TaskDto(@Size(max = 255, message = "Максимальная дл�
                       LocalDateTime createdAt,
                       TaskStatus status,
                       TaskPriority priority,
-                      UserDto userDto,
+                      Long userId,
                       Set<TagDto> tagDtos,
-                      CommentDto commentDto,
-                      ProjectDto projectDto) {
+                      Long commentId,
+                      Long projectId) {
 }

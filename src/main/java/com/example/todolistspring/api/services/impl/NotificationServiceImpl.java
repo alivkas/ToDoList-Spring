@@ -1,6 +1,6 @@
 package com.example.todolistspring.api.services.impl;
 
-import com.example.todolistspring.api.services.impl.interfaces.NotificationService;
+import com.example.todolistspring.api.services.interfaces.NotificationService;
 import com.example.todolistspring.store.entities.TaskEntity;
 import com.example.todolistspring.store.repositories.TaskRepository;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,7 +20,7 @@ public class NotificationServiceImpl implements NotificationService {
         this.emailServiceImpl = emailServiceImpl;
     }
 
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "${schedule.time}")
     @Override
     public void sendDeadlineNotification() {
         List<TaskEntity> tasks = taskRepository.findAll();

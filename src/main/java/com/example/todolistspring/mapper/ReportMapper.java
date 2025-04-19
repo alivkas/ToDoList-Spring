@@ -10,7 +10,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 /**
  * Меппер отчетов
  */
-@Mapper(componentModel = "spring", uses = {UserMapper.class, TaskMapper.class},
+@Mapper(componentModel = "spring", uses = {TaskMapper.class},
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ReportMapper {
 
@@ -19,7 +19,6 @@ public interface ReportMapper {
      * @param dto дто
      * @return сущность
      */
-    @Mapping(target = "user", source = "userDto")
     @Mapping(target = "completedTasks", source = "completedTasksDtos")
     @Mapping(target = "overdueTasks", source = "overdueTasksDtos")
     ReportEntity toEntity(ReportDto dto);
@@ -29,7 +28,7 @@ public interface ReportMapper {
      * @param entity сущность
      * @return дто
      */
-    @Mapping(target = "userDto", source = "user")
+    @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "completedTasksDtos", source = "completedTasks")
     @Mapping(target = "overdueTasksDtos", source = "overdueTasks")
     ReportDto toDto(ReportEntity entity);
@@ -39,7 +38,6 @@ public interface ReportMapper {
      * @param dto дто
      * @param entity сущность
      */
-    @Mapping(target = "user", source = "userDto")
     @Mapping(target = "completedTasks", source = "completedTasksDtos")
     @Mapping(target = "overdueTasks", source = "overdueTasksDtos")
     void updateEntity(ReportDto dto, @MappingTarget ReportEntity entity);
