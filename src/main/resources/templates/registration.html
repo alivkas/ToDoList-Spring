@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<h2>Регистрация</h2>
+<form id="registrationForm">
+    <label for="username">Имя пользователя:</label><br>
+    <input type="text" id="username" name="username" required><br><br>
+
+    <label for="password">Пароль:</label><br>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <label for="confirmPassword">Повторите пароль:</label><br>
+    <input type="password" id="confirmPassword" name="confirmPassword" required><br><br>
+
+    <button type="submit">Зарегистрироваться</button>
+    <p id="message" style="color: red;"></p>
+</form>
+
+<p>Уже есть аккаунт? <a href="/login.html">Войти</a></p>
+
+<script>
+    document.getElementById("registrationForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+
+        if (password !== confirmPassword) {
+            document.getElementById("message").innerText = "Пароли не совпадают!";
+            return;
+        }
+
+        fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "/login.html";
+                } else {
+                    response.text().then(text => {
+                        document.getElementById("message").innerText = text || "Ошибка регистрации";
+                    });
+                }
+            })
+            .catch(() => {
+                document.getElementById("message").innerText = "Ошибка соединения с сервером";
+            });
+    });
+</script>
+</body>
+</html>

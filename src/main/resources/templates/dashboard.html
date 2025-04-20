@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<h1>Мои задачи</h1>
+
+<div>
+    <button onclick="showAllTasks()">Все</button>
+    <button onclick="filterTasks(true)">Выполненные</button>
+    <button onclick="filterTasks(false)">Невыполненные</button>
+    <input type="text" id="searchInput" placeholder="Поиск..." oninput="searchTasks()" />
+    <button onclick="location.href='/add-task.html'">Добавить задачу</button>
+</div>
+
+<div id="progressContainer">
+    <label>Прогресс:</label>
+    <progress id="progressBar" value="0" max="100"></progress>
+    <span id="progressText">0%</span>
+</div>
+
+<ul id="taskList"></ul>
+
+<script>
+    let tasks = [];
+
+    async function fetchTasks() {
+        const response = await fetch('/api/tasks');
+        tasks = await response.json();
+        renderTasks(tasks);
+        updateProgress();
+    }
+
+    function renderTasks(taskArray) {
+        const list = document.getElementById('taskList');
+        list.innerHTML = '';
+        taskArray.forEach(task => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                    <strong>${task.title}</strong> — ${task.completed ? '✅' : '❌'}
+                    <button onclick="editTask(${task.id})">Редактировать</button>
+                    <button onclick="deleteTask(${task.id})">Удалить</button>
+                `;
+            list.appendChild(li);
+        });
+    }
+
+    function showAllTasks() {
+        renderTasks(tasks);
+    }
+
+    function filterTasks(completed) {
+        const filtered = tasks.filter(t => t.completed === completed);
+        renderTasks(filtered);
+    }
+
+    function searchTasks() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = tasks.filter(t => t.title.toLowerCase().includes(query));
+        renderTasks(filtered);
+    }
+
+    async function deleteTask(id) {
+        await fetch(`/api/tasks/${id}`, { method: 'DELETE' });
+        await fetchTasks();
+    }
+
+    function editTask(id) {
+        location.href = `/edit-task.html?id=${id}`;
+    }
+
+    function updateProgress() {
+        const done = tasks.filter(t => t.completed).length;
+        const percent = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
+        document.getElementById('progressBar').value = percent;
+        document.getElementById('progressText').innerText = percent + '%';
+    }
+
+    fetchTasks();
+</script>
+</body>
+</html>
