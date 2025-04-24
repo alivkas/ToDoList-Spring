@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Регистрация</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/templates/css/styles.css">
 </head>
 <body>
 <h2>Регистрация</h2>
@@ -21,7 +21,10 @@
     <p id="message" style="color: red;"></p>
 </form>
 
-<p>Уже есть аккаунт? <a href="/login.html">Войти</a></p>
+<div style="text-align: center; margin-top: 20px;">
+    <span>Уже есть аккаунт?</span>
+    <button onclick="window.location.href='/login.html'">Войти</button>
+</div>
 
 <script>
     document.getElementById("registrationForm").addEventListener("submit", function (e) {
