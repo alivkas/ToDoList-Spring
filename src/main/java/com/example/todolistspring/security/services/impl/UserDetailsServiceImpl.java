@@ -1,4 +1,4 @@
-package com.example.todolistspring.api.services.impl;
+package com.example.todolistspring.security.services.impl;
 
 import com.example.todolistspring.store.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
