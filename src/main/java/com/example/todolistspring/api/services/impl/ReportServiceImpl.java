@@ -10,11 +10,14 @@ import com.example.todolistspring.store.entities.UserEntity;
 import com.example.todolistspring.store.repositories.ReportRepository;
 import com.example.todolistspring.store.repositories.TaskRepository;
 import com.example.todolistspring.store.repositories.UserRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -34,12 +37,14 @@ public class ReportServiceImpl implements ReportService {
         this.userRepository = userRepository;
     }
 
-    //TODO сделать асинхронную генерацию
+    @Async
+    @Transactional
     @Override
-    public ReportDto generateReport(LocalDateTime startDate, LocalDateTime endDate, String username) {
+    public CompletableFuture<ReportDto> generateReport(LocalDateTime startDate,
+                                                       LocalDateTime endDate,
+                                                       String username) {
         UserEntity currentUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
-
         List<TaskEntity> completedTasks = taskRepository.findCompletedTasksBetweenAndUser(startDate,
                 endDate,
                 currentUser);
@@ -54,6 +59,7 @@ public class ReportServiceImpl implements ReportService {
 
         reportRepository.save(report);
 
-        return reportMapper.toDto(report);
+        ReportDto reportDto = reportMapper.toDto(report);
+        return CompletableFuture.completedFuture(reportDto);
     }
 }
