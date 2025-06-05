@@ -17,7 +17,8 @@ public interface ReportService {
      *
      * @param startDate начальная дата и время периода отчета (включительно)
      * @param endDate   конечная дата и время периода отчета (включительно)
+     * @param username имя текущего пользователя
      * @return DTO с данными отчета, включающего выполненные и просроченные задачи
      */
-    ReportDto generateReport(LocalDateTime startDate, LocalDateTime endDate);
+    ReportDto generateReport(LocalDateTime startDate, LocalDateTime endDate, String username);
 }

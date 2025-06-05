@@ -20,6 +20,7 @@ public class NotificationServiceImpl implements NotificationService {
         this.emailServiceImpl = emailServiceImpl;
     }
 
+    //TODO сделать асинхронным
     @Scheduled(cron = "${schedule.time}")
     @Override
     public void sendDeadlineNotification() {
