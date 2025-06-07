@@ -3,6 +3,7 @@ package com.example.todolistspring.api.services.interfaces;
 import com.example.todolistspring.api.dto.ReportDto;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Интерфейс сервиса для генерации отчетов
@@ -17,7 +18,8 @@ public interface ReportService {
      *
      * @param startDate начальная дата и время периода отчета (включительно)
      * @param endDate   конечная дата и время периода отчета (включительно)
+     * @param username  имя текущего пользователя
      * @return DTO с данными отчета, включающего выполненные и просроченные задачи
      */
-    ReportDto generateReport(LocalDateTime startDate, LocalDateTime endDate);
+    CompletableFuture<ReportDto> generateReport(LocalDateTime startDate, LocalDateTime endDate, String username);
 }
