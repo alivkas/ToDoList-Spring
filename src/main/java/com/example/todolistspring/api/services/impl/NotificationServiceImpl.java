@@ -30,7 +30,13 @@ public class NotificationServiceImpl implements NotificationService {
                 .filter(task -> task.getDeadline() != null &&
                         LocalDateTime.now().isAfter(task.getDeadline().minusHours(1)))
                 .forEach(task -> {
+                    if (task.getUser() == null) {
+                        return;
+                    }
                     String email = task.getUser().getEmail();
+                    if (email == null) {
+                        return;
+                    }
                     String subject = "Напоминание о дедлайне задачи";
                     String text = "Задача \"" + task.getTitle() + "\" скоро истекает!";
                     emailServiceImpl.sendSimpleMessage(email, subject, text);
