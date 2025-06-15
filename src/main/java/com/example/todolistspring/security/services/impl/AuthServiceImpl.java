@@ -7,6 +7,7 @@ import com.example.todolistspring.security.services.interfaces.AuthService;
 import com.example.todolistspring.store.entities.RoleEntity;
 import com.example.todolistspring.store.entities.UserEntity;
 import com.example.todolistspring.store.enums.UserRole;
+import com.example.todolistspring.store.repositories.RoleRepository;
 import com.example.todolistspring.store.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final RoleRepository roleRepository;
 
     /**
      * Конструктор для внедрения UserMapper, UserRepository, PasswordEncoder
@@ -34,10 +36,11 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     public AuthServiceImpl(UserRepository userRepository,
                            UserMapper userMapper,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     @Transactional
@@ -49,6 +52,7 @@ public class AuthServiceImpl implements AuthService {
 
         UserEntity user = userMapper.toEntity(dto, passwordEncoder);
         RoleEntity role = new RoleEntity(UserRole.ROLE_USER);
+        roleRepository.save(role);
         user.setRoles(Set.of(role));
 
         userRepository.save(user);

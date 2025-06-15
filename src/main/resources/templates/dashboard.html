@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="/templates/css/styles.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
     <style>
         #profileMenuContainer {
             position: absolute;
@@ -53,9 +53,13 @@
 </head>
 <body>
 <div id="profileMenuContainer">
-    <button id="profileButton">Профиль ⯆</button>
+    <button id="profileButton" th:text="'Профиль ⯆'"></button>
     <div id="profileMenu">
-        <a href="#" onclick="logout()">Выйти</a>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" style="width: 100%; text-align: left; padding: 10px; border: none; background: #f44336; cursor: pointer;">
+                Выйти
+            </button>
+        </form>
     </div>
 </div>
 
@@ -66,7 +70,7 @@
     <button onclick="filterTasks(true)">Выполненные</button>
     <button onclick="filterTasks(false)">Невыполненные</button>
     <input type="text" id="searchInput" placeholder="Поиск..." oninput="searchTasks()" />
-    <button onclick="location.href='/add-task.html'">Добавить задачу</button>
+    <button onclick="location.href='/task-form'">Добавить задачу</button>
 </div>
 
 <div id="progressContainer">
@@ -77,82 +81,57 @@
 
 <ul id="taskList"></ul>
 
+<div class="task-list">
+    <div th:each="task : ${tasks}" class="task-card">
+        <h3 th:text="${task.title}">Заголовок задачи</h3>
+        <p th:text="${task.description}">Описание задачи</p>
+        <p th:text="'Приоритет: ' + ${task.priority}"></p>
+        <p th:text="'Статус: ' + ${task.status}"></p>
+        <a th:href="@{/task-form(id=${task.id})}">Редактировать</a>
+    </div>
+</div>
+
 <script>
-    let tasks = [];
+    document.addEventListener("DOMContentLoaded", function () {
+        const tasks = document.querySelectorAll(".task-card");
+        const total = tasks.length;
+        const completed = Array.from(tasks).filter(task =>
+            task.textContent.includes("Статус: FINISHED")
+        ).length;
 
-    async function fetchTasks() {
-        const response = await fetch('/api/tasks');
-        tasks = await response.json();
-        renderTasks(tasks);
-        updateProgress();
-    }
+        const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
 
-    function renderTasks(taskArray) {
-        const list = document.getElementById('taskList');
-        list.innerHTML = '';
-        taskArray.forEach(task => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-                <strong>${task.title}</strong> — ${task.completed ? '✅' : '❌'}
-                <button onclick="editTask(${task.id})">Редактировать</button>
-                <button onclick="deleteTask(${task.id})">Удалить</button>
-            `;
-            list.appendChild(li);
+        document.getElementById("progressBar").value = percent;
+        document.getElementById("progressText").textContent = percent + "%";
+    });
+</script>
+
+<script>
+    function filterTasks(completed) {
+        const tasks = document.querySelectorAll(".task-card");
+        tasks.forEach(task => {
+            const status = task.textContent.includes("FINISHED");
+            if (completed && status || !completed && !status) {
+                task.style.display = "";
+            } else {
+                task.style.display = "none";
+            }
         });
     }
 
     function showAllTasks() {
-        renderTasks(tasks);
-    }
-
-    function filterTasks(completed) {
-        const filtered = tasks.filter(t => t.completed === completed);
-        renderTasks(filtered);
+        document.querySelectorAll(".task-card").forEach(task => {
+            task.style.display = "";
+        });
     }
 
     function searchTasks() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        const filtered = tasks.filter(t => t.title.toLowerCase().includes(query));
-        renderTasks(filtered);
+        const query = document.getElementById("searchInput").value.toLowerCase();
+        document.querySelectorAll(".task-card").forEach(task => {
+            const text = task.textContent.toLowerCase();
+            task.style.display = text.includes(query) ? "" : "none";
+        });
     }
-
-    async function deleteTask(id) {
-        await fetch(`/api/tasks/${id}`, { method: 'DELETE' });
-        await fetchTasks();
-    }
-
-    function editTask(id) {
-        location.href = `/edit-task.html?id=${id}`;
-    }
-
-    function updateProgress() {
-        const done = tasks.filter(t => t.completed).length;
-        const percent = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
-        document.getElementById('progressBar').value = percent;
-        document.getElementById('progressText').innerText = percent + '%';
-    }
-
-    function logout() {
-        fetch('/logout', { method: 'POST' })
-            .then(() => {
-                window.location.href = '/login.html';
-            });
-    }
-
-    document.getElementById('profileButton').addEventListener('click', function () {
-        const menu = document.getElementById('profileMenu');
-        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-    });
-
-    window.addEventListener('click', function(e) {
-        const profileButton = document.getElementById('profileButton');
-        const menu = document.getElementById('profileMenu');
-        if (!profileButton.contains(e.target) && !menu.contains(e.target)) {
-            menu.style.display = 'none';
-        }
-    });
-
-    fetchTasks();
 </script>
 </body>
 </html>

@@ -1,62 +1,104 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="ru">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Регистрация</title>-->
+<!--    <link rel="stylesheet" href="/css/styles.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--<h2>Регистрация</h2>-->
+<!--<form th:action="@{/registration}" method="post" th:object="${userDto}">-->
+<!--    <label for="username">Имя пользователя:</label><br>-->
+<!--    <input type="text" id="username" name="username" required><br><br>-->
+
+<!--    <label for="password">Пароль:</label><br>-->
+<!--    <input type="password" id="password" name="password" required><br><br>-->
+
+<!--    <label for="confirmPassword">Повторите пароль:</label><br>-->
+<!--    <input type="password" id="confirmPassword" name="confirmPassword" required><br><br>-->
+
+<!--    <button type="submit">Зарегистрироваться</button>-->
+<!--    <p id="message" style="color: red;"></p>-->
+<!--</form>-->
+
+<!--<div style="text-align: center; margin-top: 20px;">-->
+<!--    <span>Уже есть аккаунт?</span>-->
+<!--    <button onclick="window.location.href='/login.html'">Войти</button>-->
+<!--</div>-->
+
+<!--<script>-->
+<!--    document.getElementById("registrationForm").addEventListener("submit", function (e) {-->
+<!--        e.preventDefault();-->
+
+<!--        const username = document.getElementById("username").value;-->
+<!--        const password = document.getElementById("password").value;-->
+<!--        const confirmPassword = document.getElementById("confirmPassword").value;-->
+
+<!--        if (password !== confirmPassword) {-->
+<!--            document.getElementById("message").innerText = "Пароли не совпадают!";-->
+<!--            return;-->
+<!--        }-->
+
+<!--        fetch('/api/auth/register', {-->
+<!--            method: 'POST',-->
+<!--            headers: { 'Content-Type': 'application/json' },-->
+<!--            body: JSON.stringify({ username, password })-->
+<!--        })-->
+<!--            .then(response => {-->
+<!--                if (response.ok) {-->
+<!--                    window.location.href = "/login.html";-->
+<!--                } else {-->
+<!--                    response.text().then(text => {-->
+<!--                        document.getElementById("message").innerText = text || "Ошибка регистрации";-->
+<!--                    });-->
+<!--                }-->
+<!--            })-->
+<!--            .catch(() => {-->
+<!--                document.getElementById("message").innerText = "Ошибка соединения с сервером";-->
+<!--            });-->
+<!--    });-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Регистрация</title>
-    <link rel="stylesheet" href="/templates/css/styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 <h2>Регистрация</h2>
-<form id="registrationForm">
+
+<!-- Форма с биндингом к userDto -->
+<form th:action="@{/registration}" method="post" th:object="${userDto}">
     <label for="username">Имя пользователя:</label><br>
-    <input type="text" id="username" name="username" required><br><br>
+    <input type="text" id="username" th:field="*{username}" required><br>
+    <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Ошибка</div><br>
 
     <label for="password">Пароль:</label><br>
-    <input type="password" id="password" name="password" required><br><br>
+    <input type="password" id="password" th:field="*{password}" required><br>
+    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Ошибка</div><br>
 
-    <label for="confirmPassword">Повторите пароль:</label><br>
-    <input type="password" id="confirmPassword" name="confirmPassword" required><br><br>
+    <label for="passwordCheck">Повторите пароль:</label><br>
+    <input type="password" id="passwordCheck" th:field="*{passwordCheck}" required><br>
+    <div style="color:red" th:if="${#fields.hasErrors('passwordCheck')}" th:errors="*{passwordCheck}">Ошибка</div><br>
+
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" th:field="*{email}" required><br>
+    <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Ошибка</div><br>
 
     <button type="submit">Зарегистрироваться</button>
-    <p id="message" style="color: red;"></p>
 </form>
 
+<!-- Общее сообщение об ошибке -->
+<p th:if="${errorMessage}" style="color: red;" th:text="${errorMessage}"></p>
+
+<!-- Ссылка на вход -->
 <div style="text-align: center; margin-top: 20px;">
     <span>Уже есть аккаунт?</span>
-    <button onclick="window.location.href='/login.html'">Войти</button>
+    <button onclick="window.location.href='/login'">Войти</button>
 </div>
 
-<script>
-    document.getElementById("registrationForm").addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
-
-        if (password !== confirmPassword) {
-            document.getElementById("message").innerText = "Пароли не совпадают!";
-            return;
-        }
-
-        fetch('/api/auth/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        })
-            .then(response => {
-                if (response.ok) {
-                    window.location.href = "/login.html";
-                } else {
-                    response.text().then(text => {
-                        document.getElementById("message").innerText = text || "Ошибка регистрации";
-                    });
-                }
-            })
-            .catch(() => {
-                document.getElementById("message").innerText = "Ошибка соединения с сервером";
-            });
-    });
-</script>
 </body>
 </html>

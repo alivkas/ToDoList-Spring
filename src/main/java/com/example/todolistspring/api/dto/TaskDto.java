@@ -11,17 +11,19 @@ import java.util.Set;
 
 /**
  * Дто задания
- * @param title название
+ *
+ * @param title       название
  * @param description описание
- * @param createdAt время создания
- * @param status статус
- * @param priority приоритет
- * @param userId id пользователя
- * @param tagDtos множество дто тегов
- * @param commentId id комментариев
- * @param projectId id проекта
+ * @param createdAt   время создания
+ * @param status      статус
+ * @param priority    приоритет
+ * @param userId      id пользователя
+ * @param tagDtos     множество дто тегов
+ * @param commentId   id комментариев
+ * @param projectId   id проекта
  */
-public record TaskDto(@Size(max = 255, message = "Максимальная длина - 255 символов")
+public record TaskDto(Long id,
+                      @Size(max = 255, message = "Максимальная длина - 255 символов")
                       @NotBlank
                       @NotEmpty
                       String title,
@@ -30,6 +32,7 @@ public record TaskDto(@Size(max = 255, message = "Максимальная дл�
                       @NotEmpty
                       String description,
                       LocalDateTime createdAt,
+                      LocalDateTime deadline,
                       TaskStatus status,
                       TaskPriority priority,
                       Long userId,

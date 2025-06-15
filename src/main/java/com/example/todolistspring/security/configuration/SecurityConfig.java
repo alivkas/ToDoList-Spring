@@ -35,17 +35,20 @@ public class SecurityConfig {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/login",
-                                "/register",
+                                "/registration",
                                 "/error",
                                 "/",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**").permitAll()
+                        .requestMatchers("/task-form/**").authenticated()
+                        .requestMatchers("/api/task-form/**").authenticated()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/dashboard", true)
                         .permitAll()
                 )
                 .logout(logout -> logout

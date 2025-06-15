@@ -1,85 +1,128 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="ru">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Задача</title>-->
+<!--    <link rel="stylesheet" href="/css/styles.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--<h2 id="formTitle">Новая задача</h2>-->
+<!--<form id="taskForm">-->
+<!--    <label for="title">Название задачи:</label><br>-->
+<!--    <input type="text" id="title" name="title" required><br><br>-->
+
+<!--    <label for="description">Описание:</label><br>-->
+<!--    <textarea id="description" name="description"></textarea><br><br>-->
+
+<!--    <label for="priority">Приоритет:</label><br>-->
+<!--    <select id="priority" name="priority">-->
+<!--        <option value="LOW">Низкий</option>-->
+<!--        <option value="MEDIUM">Средний</option>-->
+<!--        <option value="HIGH">Высокий</option>-->
+<!--    </select><br><br>-->
+
+<!--    <label for="deadline">Дедлайн:</label><br>-->
+<!--    <input type="datetime-local" id="deadline" name="deadline"><br><br>-->
+
+<!--    <label for="category">Категория:</label><br>-->
+<!--    <input type="text" id="category" name="category"><br><br>-->
+
+<!--    <button type="submit">Сохранить</button>-->
+<!--    <button type="button" onclick="window.location.href='/dashboard.html'">Отмена</button>-->
+<!--</form>-->
+
+<!--<p id="message" style="color: green;"></p>-->
+
+<!--<script>-->
+<!--    const params = new URLSearchParams(window.location.search);-->
+<!--    const taskId = params.get("id");-->
+
+<!--    // Если taskId есть — загружаем задачу-->
+<!--    if (taskId) {-->
+<!--        document.getElementById("formTitle").innerText = "Редактирование задачи";-->
+
+<!--        fetch(`/api/tasks/${taskId}`)-->
+<!--            .then(response => response.json())-->
+<!--            .then(task => {-->
+<!--                document.getElementById("title").value = task.title;-->
+<!--                document.getElementById("description").value = task.description;-->
+<!--                document.getElementById("priority").value = task.priority;-->
+<!--                document.getElementById("deadline").value = task.deadline ? task.deadline.slice(0, 16) : "";-->
+<!--                document.getElementById("category").value = task.category || "";-->
+<!--            });-->
+<!--    }-->
+
+<!--    // Обработка отправки формы-->
+<!--    document.getElementById("taskForm").addEventListener("submit", function (event) {-->
+<!--        event.preventDefault();-->
+
+<!--        const task = {-->
+<!--            title: document.getElementById("title").value,-->
+<!--            description: document.getElementById("description").value,-->
+<!--            priority: document.getElementById("priority").value,-->
+<!--            deadline: document.getElementById("deadline").value,-->
+<!--            category: document.getElementById("category").value-->
+<!--        };-->
+
+<!--        const method = taskId ? 'PUT' : 'POST';-->
+<!--        const url = taskId ? `/api/tasks/${taskId}` : '/api/tasks';-->
+
+<!--        fetch(url, {-->
+<!--            method: method,-->
+<!--            headers: { 'Content-Type': 'application/json' },-->
+<!--            body: JSON.stringify(task)-->
+<!--        })-->
+<!--            .then(response => {-->
+<!--                if (response.ok) {-->
+<!--                    window.location.href = "/dashboard.html";-->
+<!--                } else {-->
+<!--                    document.getElementById("message").innerText = "Ошибка при сохранении задачи";-->
+<!--                }-->
+<!--            });-->
+<!--    });-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Задача</title>
-    <link rel="stylesheet" href="/templates/css/styles.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-<h2 id="formTitle">Новая задача</h2>
-<form id="taskForm">
+<h2 id="formTitle" th:text="${taskId != null} ? 'Редактирование задачи' : 'Новая задача'">Новая задача</h2>
+
+<form id="taskForm" th:action="@{/task-form}" method="post" th:object="${taskDto}">
     <label for="title">Название задачи:</label><br>
-    <input type="text" id="title" name="title" required><br><br>
+    <input type="text" id="title" name="title" th:value="${task?.title}" required><br><br>
 
     <label for="description">Описание:</label><br>
-    <textarea id="description" name="description"></textarea><br><br>
+    <textarea id="description" name="description" th:text="${task?.description}"></textarea><br><br>
 
     <label for="priority">Приоритет:</label><br>
     <select id="priority" name="priority">
-        <option value="LOW">Низкий</option>
-        <option value="MEDIUM">Средний</option>
-        <option value="HIGH">Высокий</option>
+        <option value="LOW" th:selected="${task?.priority == 'LOW'}">Низкий</option>
+        <option value="MIDDLE" th:selected="${task?.priority == 'MIDDLE'}">Средний</option>
+        <option value="HIGH" th:selected="${task?.priority == 'HIGH'}">Высокий</option>
+    </select><br><br>
+
+    <label for="status">Статус:</label><br>
+    <select id="status" name="status">
+        <option value="OPENED" th:selected="${task?.status == 'OPENED'}">OPENED</option>
+        <option value="IN_PROCESS" th:selected="${task?.status == 'IN_PROCESS'}">IN_PROCESS</option>
+        <option value="FINISHED" th:selected="${task?.status == 'FINISHED'}">FINISHED</option>
+        <option value="OVERDUE" th:selected="${task?.status == 'OVERDUE'}">OVERDUE</option>
     </select><br><br>
 
     <label for="deadline">Дедлайн:</label><br>
-    <input type="datetime-local" id="deadline" name="deadline"><br><br>
+    <input type="datetime-local" id="deadline" name="deadline"
+           th:value="${task?.deadline != null} ? ${#dates.format(task.deadline, 'yyyy-MM-dd\'T\'HH:mm')}" /><br><br>
 
-    <label for="category">Категория:</label><br>
-    <input type="text" id="category" name="category"><br><br>
-
-    <button type="submit">Сохранить</button>
-    <button type="button" onclick="window.location.href='/dashboard.html'">Отмена</button>
+    <button type="submit" onclick="window.location.href='/dashboard'">Сохранить</button>
+    <button type="button" onclick="window.location.href='/dashboard'">Отмена</button>
 </form>
 
-<p id="message" style="color: green;"></p>
-
-<script>
-    const params = new URLSearchParams(window.location.search);
-    const taskId = params.get("id");
-
-    // Если taskId есть — загружаем задачу
-    if (taskId) {
-        document.getElementById("formTitle").innerText = "Редактирование задачи";
-
-        fetch(`/api/tasks/${taskId}`)
-            .then(response => response.json())
-            .then(task => {
-                document.getElementById("title").value = task.title;
-                document.getElementById("description").value = task.description;
-                document.getElementById("priority").value = task.priority;
-                document.getElementById("deadline").value = task.deadline ? task.deadline.slice(0, 16) : "";
-                document.getElementById("category").value = task.category || "";
-            });
-    }
-
-    // Обработка отправки формы
-    document.getElementById("taskForm").addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        const task = {
-            title: document.getElementById("title").value,
-            description: document.getElementById("description").value,
-            priority: document.getElementById("priority").value,
-            deadline: document.getElementById("deadline").value,
-            category: document.getElementById("category").value
-        };
-
-        const method = taskId ? 'PUT' : 'POST';
-        const url = taskId ? `/api/tasks/${taskId}` : '/api/tasks';
-
-        fetch(url, {
-            method: method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(task)
-        })
-            .then(response => {
-                if (response.ok) {
-                    window.location.href = "/dashboard.html";
-                } else {
-                    document.getElementById("message").innerText = "Ошибка при сохранении задачи";
-                }
-            });
-    });
-</script>
+<p id="message" style="color: green;" th:text="${message}"></p>
 </body>
 </html>

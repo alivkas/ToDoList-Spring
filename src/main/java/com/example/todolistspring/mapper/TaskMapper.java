@@ -32,6 +32,7 @@ public interface TaskMapper {
     @Mapping(target = "tagDtos", source = "tags")
     @Mapping(target = "commentId", source = "comment.id")
     @Mapping(target = "projectId", source = "project.id")
+    @Mapping(target = "id", source = "id")
     TaskDto toDto(TaskEntity entity);
 
     /**
