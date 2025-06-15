@@ -13,7 +13,7 @@ import java.util.Set;
  * Сущность задания
  */
 @Entity
-@Table(name = "tbl_task")
+@Table(name = "tbl_task", schema = "public")
 public class TaskEntity extends BasicEntity {
 
     @Column(name = "title")

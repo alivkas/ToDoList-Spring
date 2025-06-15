@@ -21,12 +21,12 @@ public record UserDto(@Size(max = 25, message = "Максимальная дли
                       @NotEmpty
                       String username,
                       @Size(max = 100, message = "Максимальная длина - 100 символов")
-                      @Min(value = 5, message = "Минимальная длина пароля - 5 символов ")
+                      @Size(min = 5, message = "Минимальная длина пароля - 5 символов ")
                       @NotBlank
                       @NotEmpty
                       String password,
                       @Size(max = 100, message = "Максимальная длина - 100 символов")
-                      @Min(value = 5, message = "Минимальная длина пароля - 5 символов ")
+                      @Size(min = 5, message = "Минимальная длина пароля - 5 символов ")
                       @NotBlank
                       @NotEmpty
                       String passwordCheck,

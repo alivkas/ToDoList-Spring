@@ -51,8 +51,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         UserEntity user = userMapper.toEntity(dto, passwordEncoder);
-        RoleEntity role = new RoleEntity(UserRole.ROLE_USER);
-        roleRepository.save(role);
+        RoleEntity role = roleRepository.findByRole(UserRole.ROLE_USER);
         user.setRoles(Set.of(role));
 
         userRepository.save(user);

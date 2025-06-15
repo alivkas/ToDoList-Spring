@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * Сущность комментария
  */
 @Entity
-@Table(name = "tbl_comment")
+@Table(name = "tbl_comment", schema = "public")
 public class CommentEntity extends BasicEntity {
 
     @Column(name = "text")

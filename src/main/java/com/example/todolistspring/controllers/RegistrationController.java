@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * Контроллер для обработки регистрации через форму
  */
 @Controller
+@Validated
 public class RegistrationController {
 
     private final AuthService authService;
@@ -31,17 +33,11 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String registerUser(@ModelAttribute("userDto") @Valid UserDto userDto,
-                               BindingResult bindingResult,
                                Model model) {
 
         // Проверка совпадения паролей
         if (!userDto.password().equals(userDto.passwordCheck())) {
             model.addAttribute("error", "Пароли не совпадают");
-            return "registration";
-        }
-
-        // Проверка валидации
-        if (bindingResult.hasErrors()) {
             return "registration";
         }
 

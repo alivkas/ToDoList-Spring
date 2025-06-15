@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "tbl_role")
+@Table(name = "tbl_role", schema = "public")
 public class RoleEntity extends BasicEntity implements GrantedAuthority {
 
     @Enumerated(EnumType.STRING)

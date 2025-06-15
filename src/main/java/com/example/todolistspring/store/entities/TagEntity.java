@@ -8,7 +8,7 @@ import jakarta.persistence.*;
  * Сущность тега
  */
 @Entity
-@Table(name = "tbl_tag")
+@Table(name = "tbl_tag", schema = "public")
 public class TagEntity extends BasicEntity {
 
     @Column(name = "name")

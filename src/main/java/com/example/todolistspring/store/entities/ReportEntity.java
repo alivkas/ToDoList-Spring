@@ -11,7 +11,7 @@ import java.util.Set;
  * Сущность отчета
  */
 @Entity
-@Table(name = "tbl_report")
+@Table(name = "tbl_report", schema = "public")
 public class ReportEntity extends BasicEntity {
 
     @Column(name = "name")

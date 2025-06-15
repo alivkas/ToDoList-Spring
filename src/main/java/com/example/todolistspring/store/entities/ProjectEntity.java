@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
  * Сущность проекта
  */
 @Entity
-@Table(name = "tbl_project")
+@Table(name = "tbl_project", schema = "public")
 public class ProjectEntity extends BasicEntity {
 
     @Column(name = "name")

@@ -11,7 +11,7 @@ import java.util.*;
  * Сущность пользователя
  */
 @Entity
-@Table(name = "tbl_user")
+@Table(name = "tbl_user", schema = "public")
 public class UserEntity extends BasicEntity implements UserDetails {
 
     @Column(name = "username")
