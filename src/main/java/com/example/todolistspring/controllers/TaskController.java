@@ -43,6 +43,7 @@ public class TaskController {
         return "task-form"; // resources/templates/task-form.html
     }
 
+
     @PostMapping("/task-form")
     public String submitTaskForm(@RequestParam(value = "id", required = false) Long taskId,
                                  @ModelAttribute("taskDto") @Valid TaskDto taskDto,
@@ -68,4 +69,22 @@ public class TaskController {
         redirectAttributes.addFlashAttribute("message", "Задача успешно сохранена");
         return "redirect:/dashboard";
     }
+
+    @PostMapping("/save-task")
+    public String saveTask(@ModelAttribute TaskDto taskDto, Principal principal) {
+        if (taskDto.id() != null) {
+            taskService.updateTask(taskDto.id(), taskDto, principal.getName());
+        } else {
+            taskService.createTask(taskDto, principal.getName());
+        }
+
+        return "redirect:/dashboard";
+    }
+
+    @PostMapping("/delete-task/{id}")
+    public String deleteTask(@PathVariable Long id, Principal principal) {
+        taskService.deleteTask(id, principal.getName());
+        return "redirect:/dashboard";
+    }
+
 }

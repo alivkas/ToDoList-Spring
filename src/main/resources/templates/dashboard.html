@@ -88,6 +88,10 @@
         <p th:text="'Приоритет: ' + ${task.priority}"></p>
         <p th:text="'Статус: ' + ${task.status}"></p>
         <a th:href="@{/task-form(id=${task.id})}">Редактировать</a>
+
+        <form th:action="@{/delete-task/{id}(id=${task.id})}" method="post" style="display:inline;">
+            <button type="submit" onclick="return confirm('Удалить эту задачу?')">Удалить</button>
+        </form>
     </div>
 </div>
 
@@ -103,6 +107,21 @@
 
         document.getElementById("progressBar").value = percent;
         document.getElementById("progressText").textContent = percent + "%";
+    });
+</script>
+
+<script>
+    document.getElementById("profileButton").addEventListener("click", function () {
+        const menu = document.getElementById("profileMenu");
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+    });
+
+    document.addEventListener("click", function (event) {
+        const menu = document.getElementById("profileMenu");
+        const button = document.getElementById("profileButton");
+        if (!menu.contains(event.target) && !button.contains(event.target)) {
+            menu.style.display = "none";
+        }
     });
 </script>
 
@@ -128,8 +147,8 @@
     function searchTasks() {
         const query = document.getElementById("searchInput").value.toLowerCase();
         document.querySelectorAll(".task-card").forEach(task => {
-            const text = task.textContent.toLowerCase();
-            task.style.display = text.includes(query) ? "" : "none";
+            const title = task.querySelector("h3")?.textContent.toLowerCase() || "";
+            task.style.display = title.includes(query) ? "" : "none";
         });
     }
 </script>
