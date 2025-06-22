@@ -3,6 +3,7 @@ package com.example.todolistspring.controllers;
 import com.example.todolistspring.api.dto.UserDto;
 import com.example.todolistspring.api.exceptions.UserAlreadyExistException;
 import com.example.todolistspring.security.services.interfaces.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,12 +27,14 @@ public class RegistrationController {
     }
 
     @GetMapping("/registration")
+    @Operation(summary = "Страница регистрации")
     public String showRegistrationForm(Model model) {
         model.addAttribute("userDto", new UserDto("", "", "", "", null, null));
         return "registration";
     }
 
     @PostMapping("/registration")
+    @Operation(summary = "Регистрация пользователя")
     public String registerUser(@ModelAttribute("userDto") @Valid UserDto userDto,
                                Model model) {
 

@@ -22,7 +22,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Async
-    @Scheduled(cron = "${schedule.time}")
+    @Scheduled(cron = "${schedule.time.notify}")
     @Override
     public void sendDeadlineNotification() {
         List<TaskEntity> tasks = taskRepository.findAll();

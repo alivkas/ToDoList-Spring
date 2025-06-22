@@ -8,6 +8,7 @@ import com.example.todolistspring.api.services.interfaces.TaskService;
 import com.example.todolistspring.mapper.TaskMapper;
 import com.example.todolistspring.store.entities.TaskEntity;
 import com.example.todolistspring.store.entities.UserEntity;
+import com.example.todolistspring.store.enums.TaskStatus;
 import com.example.todolistspring.store.repositories.TaskRepository;
 import com.example.todolistspring.store.repositories.UserRepository;
 import jakarta.transaction.Transactional;
@@ -52,6 +53,8 @@ public class TaskServiceImpl implements TaskService {
 
         TaskEntity task = taskMapper.toEntity(taskDto);
         task.setUser(currentUser);
+        task.setStatus(TaskStatus.OPENED);
+        task.setCreatedAt(LocalDateTime.now());
 
         return taskMapper.toDto(taskRepository.save(task));
     }
