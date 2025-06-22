@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Отчёт по задачам</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="report-container">
+    <h1>Отчёт по задачам</h1>
+
+    <form th:action="@{/report}" method="get" class="report-form">
+        <label for="start">Дата начала:</label>
+        <input type="date" id="start" name="startDate" th:value="${startDate}">
+        <label for="end">Дата конца:</label>
+        <input type="date" id="end" name="endDate" th:value="${endDate}">
+        <button type="submit">Сформировать</button>
+    </form>
+
+    <div th:if="${tasks != null}">
+        <h2>Результаты</h2>
+        <div class="task-list">
+            <div th:each="task : ${tasks}" class="task-card">
+                <p><strong>Название:</strong> <span th:text="${task.title}"></span></p>
+                <p><strong>Описание:</strong> <span th:text="${task.description}"></span></p>
+                <p><strong>Дата:</strong><span th:text="${#temporals.format(task.deadline, 'dd.MM.yyyy')}"></span></p>
+                <p><strong>Статус:</strong>
+                    <span th:text="${task.status()} ? 'Выполнено' : 'Не выполнено'"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -26,15 +26,6 @@
         <option th:value="HIGH">Высокий</option>
     </select><br><br>
 
-    <label for="status">Статус:</label><br>
-    <select id="status" th:field="*{status}">
-        <option value="">-- выберите --</option>
-        <option th:value="OPENED">OPENED</option>
-        <option th:value="IN_PROCESS">IN_PROCESS</option>
-        <option th:value="FINISHED">FINISHED</option>
-        <option th:value="OVERDUE">OVERDUE</option>
-    </select><br><br>
-
     <label for="deadline">Дедлайн:</label><br>
     <input type="datetime-local" id="deadline" th:field="*{deadline}"/><br><br>
 
