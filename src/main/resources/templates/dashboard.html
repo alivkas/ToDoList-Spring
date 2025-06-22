@@ -71,6 +71,9 @@
     <button onclick="filterTasks(false)">Невыполненные</button>
     <input type="text" id="searchInput" placeholder="Поиск..." oninput="searchTasks()" />
     <button onclick="location.href='/task-form'">Добавить задачу</button>
+    <button onclick="location.href='/report'" style="background-color: #4CAF50; color: white; margin-left: 10px;">
+        Отчёт
+    </button>
 </div>
 
 <div id="progressContainer">
@@ -86,12 +89,14 @@
         <h3 th:text="${task.title}">Заголовок задачи</h3>
         <p th:text="${task.description}">Описание задачи</p>
         <p th:text="'Приоритет: ' + ${task.priority}"></p>
-        <p th:text="'Статус: ' + ${task.status}"></p>
-        <a th:href="@{/task-form(id=${task.id})}">Редактировать</a>
+        <p th:text="'Дедлайн: ' + ${task.deadline()}"></p>
+        <a th:href="@{/task-form(id=${task.id})}" class="edit-link">Редактировать</a>
 
-        <form th:action="@{/delete-task/{id}(id=${task.id})}" method="post" style="display:inline;">
-            <button type="submit" onclick="return confirm('Удалить эту задачу?')">Удалить</button>
-        </form>
+        <button class="delete-button"
+                th:attr="data-id=${task.id}"
+                onclick="confirmDelete(this)">
+            Удалить
+        </button>
     </div>
 </div>
 
@@ -150,6 +155,32 @@
             const title = task.querySelector("h3")?.textContent.toLowerCase() || "";
             task.style.display = title.includes(query) ? "" : "none";
         });
+    }
+</script>
+
+<script>
+    function confirmDelete(button) {
+        const taskId = button.getAttribute('data-id');
+
+        if (!confirm('Вы уверены, что хотите удалить задачу?')) {
+            return;
+        }
+
+        fetch('/delete-task', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: taskId })
+        })
+            .then(response => {
+                if (response.ok) {
+                    // можно перезагрузить страницу или удалить задачу из DOM
+                    window.location.reload();
+                } else {
+                    alert('Ошибка при удалении задачи.');
+                }
+            });
     }
 </script>
 </body>

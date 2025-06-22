@@ -4,6 +4,7 @@ import com.example.todolistspring.api.dto.TaskDto;
 import com.example.todolistspring.api.services.interfaces.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -85,11 +86,11 @@ public class TaskController {
         return "redirect:/dashboard";
     }
 
-    @PostMapping("/delete-task/{id}")
-    @Operation(summary = "Удаление заданий")
-    public String deleteTask(@PathVariable Long id, Principal principal) {
-        taskService.deleteTask(id, principal.getName());
-        return "redirect:/dashboard";
+    @PostMapping("/delete-task")
+    @ResponseBody
+    public ResponseEntity<?> deleteTask(@RequestBody TaskDto taskDto, Principal principal) {
+        taskService.deleteTask(taskDto.id(), principal.getName());
+        return ResponseEntity.ok("Deleted");
     }
 
 }

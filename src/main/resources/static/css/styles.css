@@ -102,6 +102,32 @@ progress::-webkit-progress-value {
 #taskList li button:hover {
     opacity: 0.9;
 }
+.task-card {
+    position: relative;
+    padding: 20px;
+    border-radius: 10px;
+    background: white;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.delete-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+    background-color: #d32f2f;
+}
 
 .task-card {
     background-color: white;
@@ -184,4 +210,18 @@ button:hover {
     text-align: center;
     margin-top: 20px;
     font-weight: bold;
+}
+
+.edit-link {
+    color: white;
+    background-color: #4CAF50; /* зелёный */
+    padding: 6px 12px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.edit-link:hover {
+    background-color: #45a049;
 }

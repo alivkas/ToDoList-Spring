@@ -52,8 +52,12 @@ public class AuthServiceImpl implements AuthService {
 
         UserEntity user = userMapper.toEntity(dto, passwordEncoder);
         RoleEntity role = roleRepository.findByRole(UserRole.ROLE_USER);
+        if (role == null) {
+            throw new IllegalStateException("Роль ROLE_USER не найдена в базе данных");
+        }
         user.setRoles(Set.of(role));
 
         userRepository.save(user);
     }
+
 }
