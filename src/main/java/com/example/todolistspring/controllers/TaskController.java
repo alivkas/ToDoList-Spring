@@ -2,6 +2,7 @@ package com.example.todolistspring.controllers;
 
 import com.example.todolistspring.api.dto.TaskDto;
 import com.example.todolistspring.api.services.interfaces.TaskService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ public class TaskController {
 
 
     @GetMapping("/task-form")
+    @Operation(summary = "Страница заданий")
     public String showTaskForm(@RequestParam(value = "id", required = false) Long taskId,
                                Model model,
                                Principal principal) {
@@ -46,6 +48,7 @@ public class TaskController {
 
 
     @PostMapping("/task-form")
+    @Operation(summary = "Форма заданий")
     public String submitTaskForm(@RequestParam(value = "id", required = false) Long taskId,
                                  @ModelAttribute("taskDto") @Valid TaskDto taskDto,
                                  BindingResult bindingResult,
@@ -72,6 +75,7 @@ public class TaskController {
     }
 
     @PostMapping("/save-task")
+    @Operation(summary = "Сохранение заданий")
     public String saveTask(@ModelAttribute TaskDto taskDto, Principal principal) {
         if (taskDto.id() != null) {
             taskService.updateTask(taskDto.id(), taskDto, principal.getName());

@@ -1,9 +1,6 @@
 package com.example.todolistspring.api.exceptions.advice;
 
-import com.example.todolistspring.api.exceptions.NotOwnerException;
-import com.example.todolistspring.api.exceptions.TaskNotFoundException;
-import com.example.todolistspring.api.exceptions.UserAlreadyExistException;
-import com.example.todolistspring.api.exceptions.UserNotFoundException;
+import com.example.todolistspring.api.exceptions.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,7 +27,7 @@ public class AllExceptionHandler {
      * Отловить Exception
      * @param e ошибка Exception
      * @param model модель представления
-     * @return шалон с ошибкой
+     * @return шаблон с ошибкой
      */
     @ExceptionHandler(Exception.class)
     public String handleException(Exception e, Model model) {

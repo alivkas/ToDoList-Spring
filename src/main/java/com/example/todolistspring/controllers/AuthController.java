@@ -3,6 +3,7 @@ package com.example.todolistspring.controllers;
 
 import com.example.todolistspring.store.entities.UserEntity;
 import com.example.todolistspring.store.repositories.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,7 @@ public class AuthController {
     }
 
     @GetMapping("/login")
+    @Operation(summary = "Страница входа")
     public String loginPage() {
         return "login"; // Вернёт login.html, если он лежит в templates/
     }

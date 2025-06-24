@@ -3,12 +3,14 @@ package com.example.todolistspring.store.repositories;
 import com.example.todolistspring.store.entities.TagEntity;
 import com.example.todolistspring.store.entities.TaskEntity;
 import com.example.todolistspring.store.entities.UserEntity;
+import com.example.todolistspring.store.enums.TaskStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Репозиторий для работы с сущностью
@@ -79,4 +81,19 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
      * @return список задач пользователя
      */
     List<TaskEntity> findAllByUser(UserEntity user);
+
+    /**
+     * Получить все задания по их статусу
+     * @param taskStatus статус задания
+     * @return список заданий
+     */
+    List<TaskEntity> findAllByStatus(TaskStatus taskStatus);
+
+    /**
+     * Получить задание по ее id и статусу
+     * @param taskId id задания
+     * @param status статус задания
+     * @return задание
+     */
+    Optional<TaskEntity> findByIdAndStatus(Long taskId, TaskStatus status);
 }

@@ -20,7 +20,7 @@ public class SecurityConfig {
 
     /**
      * Бин кодировки пароля
-     * @return
+     * @return способ кодировки
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -38,6 +38,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/login",
                                 "/registration",
+                                "/swagger-ui/**",
+                                "/v3/**",
+                                "/actuator",
+                                "/actuator/**",
                                 "/error",
                                 "/",
                                 "/css/**",

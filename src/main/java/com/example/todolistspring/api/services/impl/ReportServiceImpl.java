@@ -37,7 +37,7 @@ public class ReportServiceImpl implements ReportService {
         this.userRepository = userRepository;
     }
 
-    @Async
+    @Async("reportTaskExecutor")
     @Transactional
     @Override
     public CompletableFuture<ReportDto> generateReport(LocalDateTime startDate,
