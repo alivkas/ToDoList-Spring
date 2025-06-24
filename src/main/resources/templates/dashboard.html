@@ -1,5 +1,192 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="ru" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Dashboard</title>-->
+<!--    <link rel="stylesheet" th:href="@{/css/styles.css}">-->
+<!--    <style>-->
+<!--        #profileMenuContainer {-->
+<!--            position: absolute;-->
+<!--            top: 20px;-->
+<!--            right: 20px;-->
+<!--        }-->
+
+<!--        #profileButton {-->
+<!--            background-color: #2196F3;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            padding: 10px 15px;-->
+<!--            border-radius: 5px;-->
+<!--            cursor: pointer;-->
+<!--            font-size: 14px;-->
+<!--            transition: background-color 0.3s;-->
+<!--        }-->
+
+<!--        #profileButton:hover {-->
+<!--            background-color: #1976D2;-->
+<!--        }-->
+
+<!--        #profileMenu {-->
+<!--            display: none;-->
+<!--            position: absolute;-->
+<!--            top: 45px;-->
+<!--            right: 0;-->
+<!--            background-color: white;-->
+<!--            border: 1px solid #ccc;-->
+<!--            border-radius: 8px;-->
+<!--            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);-->
+<!--            min-width: 150px;-->
+<!--            z-index: 999;-->
+<!--        }-->
+
+<!--        #profileMenu a {-->
+<!--            display: block;-->
+<!--            padding: 10px 15px;-->
+<!--            color: #333;-->
+<!--            text-decoration: none;-->
+<!--        }-->
+
+<!--        #profileMenu a:hover {-->
+<!--            background-color: #f0f0f0;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div id="profileMenuContainer">-->
+<!--    <button id="profileButton" th:text="'Профиль ⯆'"></button>-->
+<!--    <div id="profileMenu">-->
+<!--        <form th:action="@{/logout}" method="post">-->
+<!--            <button type="submit" style="width: 100%; text-align: left; padding: 10px; border: none; background: #f44336; cursor: pointer;">-->
+<!--                Выйти-->
+<!--            </button>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<h1>Мои задачи</h1>-->
+
+<!--<div>-->
+<!--    <button onclick="showAllTasks()">Все</button>-->
+<!--    <button onclick="filterTasks(true)">Выполненные</button>-->
+<!--    <button onclick="filterTasks(false)">Невыполненные</button>-->
+<!--    <input type="text" id="searchInput" placeholder="Поиск..." oninput="searchTasks()" />-->
+<!--    <button onclick="location.href='/task-form'">Добавить задачу</button>-->
+<!--    <button onclick="location.href='/report'" style="background-color: #4CAF50; color: white; margin-left: 10px;">-->
+<!--        Отчёт-->
+<!--    </button>-->
+<!--</div>-->
+
+<!--<div id="progressContainer">-->
+<!--    <label>Прогресс:</label>-->
+<!--    <progress id="progressBar" value="0" max="100"></progress>-->
+<!--    <span id="progressText">0%</span>-->
+<!--</div>-->
+
+<!--<ul id="taskList"></ul>-->
+
+<!--<div class="task-list">-->
+<!--    <div th:each="task : ${tasks}" class="task-card">-->
+<!--        <h3 th:text="${task.title}">Заголовок задачи</h3>-->
+<!--        <p th:text="${task.description}">Описание задачи</p>-->
+<!--        <p th:text="'Приоритет: ' + ${task.priority}"></p>-->
+<!--        <p th:text="'Дедлайн: ' + ${task.deadline()}"></p>-->
+<!--        <a th:href="@{/task-form(id=${task.id})}" class="edit-link">Редактировать</a>-->
+
+<!--        <button class="delete-button"-->
+<!--                th:attr="data-id=${task.id}"-->
+<!--                onclick="confirmDelete(this)">-->
+<!--            Удалить-->
+<!--        </button>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<script>-->
+<!--    document.addEventListener("DOMContentLoaded", function () {-->
+<!--        const tasks = document.querySelectorAll(".task-card");-->
+<!--        const total = tasks.length;-->
+<!--        const completed = Array.from(tasks).filter(task =>-->
+<!--            task.textContent.includes("Статус: FINISHED")-->
+<!--        ).length;-->
+
+<!--        const percent = total === 0 ? 0 : Math.round((completed / total) * 100);-->
+
+<!--        document.getElementById("progressBar").value = percent;-->
+<!--        document.getElementById("progressText").textContent = percent + "%";-->
+<!--    });-->
+<!--</script>-->
+
+<!--<script>-->
+<!--    document.getElementById("profileButton").addEventListener("click", function () {-->
+<!--        const menu = document.getElementById("profileMenu");-->
+<!--        menu.style.display = menu.style.display === "block" ? "none" : "block";-->
+<!--    });-->
+
+<!--    document.addEventListener("click", function (event) {-->
+<!--        const menu = document.getElementById("profileMenu");-->
+<!--        const button = document.getElementById("profileButton");-->
+<!--        if (!menu.contains(event.target) && !button.contains(event.target)) {-->
+<!--            menu.style.display = "none";-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
+
+<!--<script>-->
+<!--    function filterTasks(completed) {-->
+<!--        const tasks = document.querySelectorAll(".task-card");-->
+<!--        tasks.forEach(task => {-->
+<!--            const status = task.textContent.includes("FINISHED");-->
+<!--            if (completed && status || !completed && !status) {-->
+<!--                task.style.display = "";-->
+<!--            } else {-->
+<!--                task.style.display = "none";-->
+<!--            }-->
+<!--        });-->
+<!--    }-->
+
+<!--    function showAllTasks() {-->
+<!--        document.querySelectorAll(".task-card").forEach(task => {-->
+<!--            task.style.display = "";-->
+<!--        });-->
+<!--    }-->
+
+<!--    function searchTasks() {-->
+<!--        const query = document.getElementById("searchInput").value.toLowerCase();-->
+<!--        document.querySelectorAll(".task-card").forEach(task => {-->
+<!--            const title = task.querySelector("h3")?.textContent.toLowerCase() || "";-->
+<!--            task.style.display = title.includes(query) ? "" : "none";-->
+<!--        });-->
+<!--    }-->
+<!--</script>-->
+
+<!--<script>-->
+<!--    function confirmDelete(button) {-->
+<!--        const taskId = button.getAttribute('data-id');-->
+
+<!--        if (!confirm('Вы уверены, что хотите удалить задачу?')) {-->
+<!--            return;-->
+<!--        }-->
+
+<!--        fetch('/delete-task', {-->
+<!--            method: 'POST',-->
+<!--            headers: {-->
+<!--                'Content-Type': 'application/json'-->
+<!--            },-->
+<!--            body: JSON.stringify({ id: taskId })-->
+<!--        })-->
+<!--            .then(response => {-->
+<!--                if (response.ok) {-->
+<!--                    // можно перезагрузить страницу или удалить задачу из DOM-->
+<!--                    window.location.reload();-->
+<!--                } else {-->
+<!--                    alert('Ошибка при удалении задачи.');-->
+<!--                }-->
+<!--            });-->
+<!--    }-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
@@ -39,51 +226,59 @@
             z-index: 999;
         }
 
-        #profileMenu a {
+        #profileMenu a, #profileMenu form button {
             display: block;
             padding: 10px 15px;
             color: #333;
             text-decoration: none;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
         }
 
-        #profileMenu a:hover {
+        #profileMenu a:hover,
+        #profileMenu form button:hover {
             background-color: #f0f0f0;
         }
     </style>
 </head>
 <body>
 <div id="profileMenuContainer">
-    <button id="profileButton" th:text="'Профиль ⯆'"></button>
+    <button id="profileButton">Профиль ⯆</button>
     <div id="profileMenu">
         <form th:action="@{/logout}" method="post">
-            <button type="submit" style="width: 100%; text-align: left; padding: 10px; border: none; background: #f44336; cursor: pointer;">
-                Выйти
-            </button>
+            <button type="submit" style="background: #f44336; color: white;">Выйти</button>
         </form>
     </div>
 </div>
 
-<h1>Мои задачи</h1>
+<h1 style="text-align: center;">Мои задачи</h1>
 
-<div>
+<div style="text-align: center; margin-bottom: 20px;">
     <button onclick="showAllTasks()">Все</button>
     <button onclick="filterTasks(true)">Выполненные</button>
     <button onclick="filterTasks(false)">Невыполненные</button>
     <input type="text" id="searchInput" placeholder="Поиск..." oninput="searchTasks()" />
     <button onclick="location.href='/task-form'">Добавить задачу</button>
-    <button onclick="location.href='/report'" style="background-color: #4CAF50; color: white; margin-left: 10px;">
-        Отчёт
-    </button>
+    <button onclick="location.href='/report'" style="background-color: #4CAF50; color: white; margin-left: 10px;">Отчёт</button>
 </div>
 
-<div id="progressContainer">
+<div id="progressContainer" style="text-align: center; margin-bottom: 20px;">
     <label>Прогресс:</label>
     <progress id="progressBar" value="0" max="100"></progress>
     <span id="progressText">0%</span>
 </div>
 
-<ul id="taskList"></ul>
+<!-- Админ-панель -->
+<div sec:authorize="hasRole('ADMIN')" style="text-align: center; margin-top: 30px;">
+    <h2>Админ-панель</h2>
+    <button onclick="location.href='/admin/users'" style="margin: 5px;">Пользователи</button>
+    <button onclick="location.href='/admin/tasks'" style="margin: 5px;">Все задачи</button>
+</div>
 
+<!-- Список задач -->
 <div class="task-list">
     <div th:each="task : ${tasks}" class="task-card">
         <h3 th:text="${task.title}">Заголовок задачи</h3>
@@ -91,12 +286,7 @@
         <p th:text="'Приоритет: ' + ${task.priority}"></p>
         <p th:text="'Дедлайн: ' + ${task.deadline()}"></p>
         <a th:href="@{/task-form(id=${task.id})}" class="edit-link">Редактировать</a>
-
-        <button class="delete-button"
-                th:attr="data-id=${task.id}"
-                onclick="confirmDelete(this)">
-            Удалить
-        </button>
+        <button class="delete-button" th:attr="data-id=${task.id}" onclick="confirmDelete(this)">Удалить</button>
     </div>
 </div>
 
@@ -113,9 +303,7 @@
         document.getElementById("progressBar").value = percent;
         document.getElementById("progressText").textContent = percent + "%";
     });
-</script>
 
-<script>
     document.getElementById("profileButton").addEventListener("click", function () {
         const menu = document.getElementById("profileMenu");
         menu.style.display = menu.style.display === "block" ? "none" : "block";
@@ -128,18 +316,12 @@
             menu.style.display = "none";
         }
     });
-</script>
 
-<script>
     function filterTasks(completed) {
         const tasks = document.querySelectorAll(".task-card");
         tasks.forEach(task => {
             const status = task.textContent.includes("FINISHED");
-            if (completed && status || !completed && !status) {
-                task.style.display = "";
-            } else {
-                task.style.display = "none";
-            }
+            task.style.display = (completed && status) || (!completed && !status) ? "" : "none";
         });
     }
 
@@ -156,31 +338,17 @@
             task.style.display = title.includes(query) ? "" : "none";
         });
     }
-</script>
 
-<script>
     function confirmDelete(button) {
         const taskId = button.getAttribute('data-id');
-
-        if (!confirm('Вы уверены, что хотите удалить задачу?')) {
-            return;
-        }
+        if (!confirm('Вы уверены, что хотите удалить задачу?')) return;
 
         fetch('/delete-task', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: taskId })
         })
-            .then(response => {
-                if (response.ok) {
-                    // можно перезагрузить страницу или удалить задачу из DOM
-                    window.location.reload();
-                } else {
-                    alert('Ошибка при удалении задачи.');
-                }
-            });
+            .then(response => response.ok ? window.location.reload() : alert('Ошибка при удалении задачи.'));
     }
 </script>
 </body>
