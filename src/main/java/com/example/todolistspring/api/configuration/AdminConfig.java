@@ -7,6 +7,8 @@ import com.example.todolistspring.store.repositories.RoleRepository;
 import com.example.todolistspring.store.repositories.UserRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -29,6 +31,8 @@ public class AdminConfig {
     private final String adminEmail;
     private final String adminPassword;
     private final String adminUsername;
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(AdminConfig.class);
 
     /**
      * Конструктор для внедрения UserRepository, PasswordEncoder, RoleRepository
@@ -66,6 +70,14 @@ public class AdminConfig {
             user.setRoles(Set.of(role));
 
             userRepository.save(user);
+            LOGGER.debug("""
+                    Админ создан
+                    Логин: {}
+                    Пароль: {}
+                    """,
+                    adminUsername,
+                    adminPassword);
         }
+        LOGGER.debug("Админ уже есть");
     }
 }

@@ -10,6 +10,8 @@ import com.example.todolistspring.store.enums.UserRole;
 import com.example.todolistspring.store.repositories.RoleRepository;
 import com.example.todolistspring.store.repositories.UserRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,8 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     /**
      * Конструктор для внедрения UserMapper, UserRepository, PasswordEncoder
@@ -58,6 +62,7 @@ public class AuthServiceImpl implements AuthService {
         user.setRoles(Set.of(role));
 
         userRepository.save(user);
+        LOGGER.debug("Пользователь {} сохранен", user.getEmail());
     }
 
 }

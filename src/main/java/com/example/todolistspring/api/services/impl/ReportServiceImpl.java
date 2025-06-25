@@ -11,6 +11,8 @@ import com.example.todolistspring.store.repositories.ReportRepository;
 import com.example.todolistspring.store.repositories.TaskRepository;
 import com.example.todolistspring.store.repositories.UserRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,8 @@ public class ReportServiceImpl implements ReportService {
     private final ReportRepository reportRepository;
     private final ReportMapper reportMapper;
     private final UserRepository userRepository;
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(ReportServiceImpl.class);
 
     public ReportServiceImpl(TaskRepository taskRepository,
                              ReportRepository reportRepository,
@@ -58,6 +62,8 @@ public class ReportServiceImpl implements ReportService {
         report.setUser(currentUser);
 
         reportRepository.save(report);
+
+        LOGGER.debug("Отчет с id {} для пользователя {} сформирован", report.getId(), report.getUser().getEmail());
 
         ReportDto reportDto = reportMapper.toDto(report);
         return CompletableFuture.completedFuture(reportDto);
