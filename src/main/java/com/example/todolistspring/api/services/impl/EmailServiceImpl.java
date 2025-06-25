@@ -26,7 +26,7 @@ public class EmailServiceImpl implements EmailService {
         message.setText(text);
         mailSender.send(message);
 
-        LOGGER.debug("Сообщение {} отправлено на {}", message.getSubject(), message.getFrom());
+        LOGGER.info("Сообщение {} отправлено на {}", message.getSubject(), message.getFrom());
     }
 
 }

@@ -55,7 +55,7 @@ public class AdminServiceImpl implements AdminService {
     public List<TaskDto> getAllTasks() {
         List<TaskEntity> tasks = taskRepository.findAll();
 
-        LOGGER.debug("Получен список всех заданий админом");
+        LOGGER.info("Получен список всех заданий админом");
 
         return tasks.stream()
                 .map(taskMapper::toDto)
@@ -67,7 +67,7 @@ public class AdminServiceImpl implements AdminService {
         TaskEntity task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
 
-        LOGGER.debug("Получено задание с id {} админом", taskId);
+        LOGGER.info("Получено задание с id {} админом", taskId);
 
         return taskMapper.toDto(task);
     }
@@ -78,7 +78,7 @@ public class AdminServiceImpl implements AdminService {
         TaskEntity task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
 
-        LOGGER.debug("Удалено задание с id {} админом", taskId);
+        LOGGER.info("Удалено задание с id {} админом", taskId);
 
         taskRepository.delete(task);
     }
@@ -87,7 +87,7 @@ public class AdminServiceImpl implements AdminService {
     public List<UserDto> getAllUsers() {
         List<UserEntity> users = userRepository.findAll();
 
-        LOGGER.debug("Получены все пользователи админом");
+        LOGGER.info("Получены все пользователи админом");
 
         return users.stream()
                 .map(userMapper::toDto)
@@ -99,7 +99,7 @@ public class AdminServiceImpl implements AdminService {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
 
-        LOGGER.debug("Получен пользователь {} админом", user.getEmail());
+        LOGGER.info("Получен пользователь {} админом", user.getEmail());
 
         return userMapper.toDto(user);
     }
@@ -109,7 +109,7 @@ public class AdminServiceImpl implements AdminService {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
 
-        LOGGER.debug("Удален пользователь {} админом", user.getEmail());
+        LOGGER.info("Удален пользователь {} админом", user.getEmail());
 
         userRepository.delete(user);
     }

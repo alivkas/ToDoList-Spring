@@ -53,7 +53,7 @@ public class TaskStatusServiceImpl implements TaskStatusService {
                 openedTask.setStatus(TaskStatus.OVERDUE);
                 taskRepository.save(openedTask);
 
-                LOGGER.debug("Статус задания {} изменен на {}",
+                LOGGER.info("Статус задания {} изменен на {}",
                         openedTask.getId(),
                         openedTask.getStatus().name());
             }
@@ -74,7 +74,7 @@ public class TaskStatusServiceImpl implements TaskStatusService {
         openedTask.setStatus(TaskStatus.FINISHED);
         taskRepository.save(openedTask);
 
-        LOGGER.debug("Задание {} завершено", openedTask.getId());
+        LOGGER.info("Задание {} завершено", openedTask.getId());
     }
 
     /**

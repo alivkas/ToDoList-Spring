@@ -62,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
         user.setRoles(Set.of(role));
 
         userRepository.save(user);
-        LOGGER.debug("Пользователь {} сохранен", user.getEmail());
+        LOGGER.info("Пользователь {} сохранен", user.getEmail());
     }
 
 }

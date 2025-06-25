@@ -60,7 +60,7 @@ public class TaskServiceImpl implements TaskService {
         task.setStatus(TaskStatus.OPENED);
         task.setCreatedAt(LocalDateTime.now());
 
-        LOGGER.debug("Задание {} создано пользователем {}", task.getId(), username);
+        LOGGER.info("Задание {} создано пользователем {}", task.getId(), username);
 
         return taskMapper.toDto(taskRepository.save(task));
     }
@@ -77,7 +77,7 @@ public class TaskServiceImpl implements TaskService {
             throw new NotOwnerException(currentUser.getUsername(), task.getTitle());
         }
 
-        LOGGER.debug("Задание {} изменено пользователем {}", task.getId(), username);
+        LOGGER.info("Задание {} изменено пользователем {}", task.getId(), username);
 
         taskMapper.updateEntity(taskDto, task);
         return taskMapper.toDto(taskRepository.save(task));
@@ -95,7 +95,7 @@ public class TaskServiceImpl implements TaskService {
             throw new NotOwnerException(currentUser.getUsername(), task.getTitle());
         }
 
-        LOGGER.debug("Задание {} удалено пользователем {}", task.getId(), username);
+        LOGGER.info("Задание {} удалено пользователем {}", task.getId(), username);
 
         taskRepository.delete(task);
     }
@@ -111,7 +111,7 @@ public class TaskServiceImpl implements TaskService {
             throw new NotOwnerException(currentUser.getUsername(), task.getTitle());
         }
 
-        LOGGER.debug("Задание {} получено пользователем {}", task.getId(), username);
+        LOGGER.info("Задание {} получено пользователем {}", task.getId(), username);
 
         return taskMapper.toDto(task);
     }
@@ -122,7 +122,7 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new UserNotFoundException(username));
         List<TaskEntity> tasks = taskRepository.findAllByUser(currentUser);
 
-        LOGGER.debug("Получены все задания пользователя {}", username);
+        LOGGER.info("Получены все задания пользователя {}", username);
 
         return tasks.stream()
                 .map(taskMapper::toDto)
@@ -150,7 +150,7 @@ public class TaskServiceImpl implements TaskService {
 
         tasks = tasks.stream().distinct().collect(Collectors.toList());
 
-        LOGGER.debug("Задания пользователя {} отфильтрованы", username);
+        LOGGER.info("Задания пользователя {} отфильтрованы", username);
 
         return tasks.stream().map(taskMapper::toDto).collect(Collectors.toList());
 

@@ -39,13 +39,13 @@ public class RoleConfig {
             RoleEntity role = new RoleEntity();
             role.setRole(UserRole.ROLE_ADMIN);
             roleRepository.save(role);
-            LOGGER.debug("Роль {} создана", role.getRole().name());
+            LOGGER.info("Роль {} создана", role.getRole().name());
         }
         if (!roleRepository.existsByRole(UserRole.ROLE_USER)) {
             RoleEntity role = new RoleEntity();
             role.setRole(UserRole.ROLE_USER);
             roleRepository.save(role);
-            LOGGER.debug("Роль {} создана", role.getRole().name());
+            LOGGER.info("Роль {} создана", role.getRole().name());
         }
     }
 }

@@ -38,10 +38,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/login",
                                 "/registration",
-                                "/swagger-ui/**",
-                                "/v3/**",
-                                "/actuator",
-                                "/actuator/**",
                                 "/error",
                                 "/",
                                 "/css/**",
@@ -49,8 +45,12 @@ public class SecurityConfig {
                                 "/images/**").permitAll()
                         .requestMatchers("/task-form/**").authenticated()
                         .requestMatchers("/api/task-form/**").authenticated()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/admin/**",
+                                "/swagger-ui/**",
+                                "/v3/**",
+                                "/actuator",
+                                "/actuator/**",
+                                "/admin").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")

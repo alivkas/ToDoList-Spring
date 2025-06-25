@@ -70,7 +70,7 @@ public class AdminConfig {
             user.setRoles(Set.of(role));
 
             userRepository.save(user);
-            LOGGER.debug("""
+            LOGGER.info("""
                     Админ создан
                     Логин: {}
                     Пароль: {}
@@ -78,6 +78,6 @@ public class AdminConfig {
                     adminUsername,
                     adminPassword);
         }
-        LOGGER.debug("Админ уже есть");
+        LOGGER.info("Админ уже есть");
     }
 }

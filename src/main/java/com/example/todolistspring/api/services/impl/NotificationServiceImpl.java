@@ -35,12 +35,12 @@ public class NotificationServiceImpl implements NotificationService {
                         LocalDateTime.now().isAfter(task.getDeadline().minusHours(1)))
                 .forEach(task -> {
                     if (task.getUser() == null) {
-                        LOGGER.debug("Пользователя для отправки уведомления нет");
+                        LOGGER.info("Пользователя для отправки уведомления нет");
                         return;
                     }
                     String email = task.getUser().getEmail();
                     if (email == null) {
-                        LOGGER.debug("Почты для отправки уведомления не существует");
+                        LOGGER.info("Почты для отправки уведомления не существует");
                         return;
                     }
                     String subject = "Напоминание о дедлайне задачи";

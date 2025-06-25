@@ -63,7 +63,7 @@ public class ReportServiceImpl implements ReportService {
 
         reportRepository.save(report);
 
-        LOGGER.debug("Отчет с id {} для пользователя {} сформирован", report.getId(), report.getUser().getEmail());
+        LOGGER.info("Отчет с id {} для пользователя {} сформирован", report.getId(), report.getUser().getEmail());
 
         ReportDto reportDto = reportMapper.toDto(report);
         return CompletableFuture.completedFuture(reportDto);
