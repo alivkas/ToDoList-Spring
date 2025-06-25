@@ -9,7 +9,18 @@
 <div class="container">
     <h1>Произошла ошибка</h1>
     <p th:text="${message}">Что-то пошло не так.</p>
-    <a href="/dashboard">Вернуться на главную</a>
+    <button onclick="location.href='/dashboard'" style="
+        background-color: #2196F3;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-right: 10px;
+    ">
+        Вернуться на главную
+    </button>
 </div>
 </body>
 </html>

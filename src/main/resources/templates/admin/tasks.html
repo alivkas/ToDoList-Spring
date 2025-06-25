@@ -4,21 +4,40 @@
     <meta charset="UTF-8">
     <title>Админ – Задачи</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .delete-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .delete-button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
 </head>
 <body>
 
 <div id="profileMenuContainer">
-    <button id="profileButton">Профиль ⯆</button>
-    <div id="profileMenu">
-        <form th:action="@{/logout}" method="post">
-            <button type="submit" style="width: 100%; text-align: left; padding: 10px; border: none; background: #f44336;">
-                Выйти
-            </button>
-        </form>
-    </div>
+    <button onclick="location.href='/dashboard'" style="
+        background-color: #2196F3;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-right: 10px;
+    ">
+        На главную
+    </button>
 </div>
 
-<h1>Все задачи в системе</h1>
+<h1 style="text-align: center;">Все задачи в системе</h1>
 
 <div class="task-list" style="max-width: 800px; margin: 0 auto;">
     <div th:each="task : ${tasks}" class="task-card">
@@ -26,10 +45,11 @@
         <p th:text="${task.description}">Описание</p>
         <p th:text="'Приоритет: ' + ${task.priority}">Приоритет</p>
         <p th:text="'Дедлайн: ' + ${task.deadline()}">Дедлайн</p>
-        <form th:action="@{/admin/delete-task}" method="post" style="margin-top: 10px;">
-            <input type="hidden" name="taskId" th:value="${task.id}" />
-            <button class="delete-button" type="submit">Удалить</button>
-        </form>
+        <button class="delete-button"
+                th:attr="data-id=${task.id}"
+                onclick="deleteTask(this)">
+            Удалить
+        </button>
     </div>
 </div>
 
@@ -46,6 +66,28 @@
             menu.style.display = "none";
         }
     });
+
+    function deleteTask(button) {
+        const taskId = button.getAttribute('data-id');
+        if (!confirm('Удалить задачу?')) return;
+
+        const formData = new URLSearchParams();
+        formData.append("taskId", taskId);
+
+        fetch('/admin/delete-task', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formData.toString()
+        }).then(response => {
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert('Ошибка при удалении задачи.');
+            }
+        });
+    }
 </script>
 
 </body>

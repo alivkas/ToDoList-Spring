@@ -1,7 +1,7 @@
 package com.example.todolistspring.controllers;
 
-import com.example.todolistspring.api.dto.TaskDto;
-import com.example.todolistspring.api.services.interfaces.TaskService;
+import com.example.todolistspring.api.dto.ReportDto;
+import com.example.todolistspring.api.services.interfaces.ReportService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,15 +10,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Controller
 public class ReportController {
 
-    private final TaskService taskService;
+    private final ReportService reportService;
 
-    public ReportController(TaskService taskService) {
-        this.taskService = taskService;
+    public ReportController(ReportService reportService) {
+        this.reportService = reportService;
     }
 
     @GetMapping("/report")
@@ -29,14 +29,18 @@ public class ReportController {
             Model model) {
 
         if (startDate != null && endDate != null && userDetails != null) {
-            // Увеличиваем конец периода до конца дня
             endDate = endDate.withHour(23).withMinute(59).withSecond(59).withNano(999_999_999);
 
-            List<TaskDto> tasks = taskService.filterTasks(null, null, startDate, endDate, userDetails.getUsername());
-            model.addAttribute("tasks", tasks);
+            try {
+                ReportDto report = reportService
+                        .generateReport(startDate, endDate, userDetails.getUsername())
+                        .get(); // ждём результат
+                model.addAttribute("report", report);
+            } catch (InterruptedException | ExecutionException e) {
+                model.addAttribute("error", "Не удалось сгенерировать отчёт: " + e.getMessage());
+            }
         }
 
         return "report";
     }
 }
-

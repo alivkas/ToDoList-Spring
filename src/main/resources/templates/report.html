@@ -10,6 +10,25 @@
             margin: 0;
             padding: 20px;
         }
+        #topButtonContainer {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .back-button:hover {
+            background-color: #1976D2;
+        }
 
         h1, h2 {
             text-align: center;
@@ -33,10 +52,6 @@
             margin-bottom: 30px;
         }
 
-        .report-form label {
-            font-weight: bold;
-        }
-
         .report-form input, .report-form button {
             padding: 6px 12px;
             border: 1px solid #ccc;
@@ -58,13 +73,13 @@
         .table-container {
             display: flex;
             justify-content: center;
+            margin-top: 20px;
         }
 
         table {
             border-collapse: collapse;
             width: 80%;
             background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             border-radius: 12px;
             overflow: hidden;
         }
@@ -89,6 +104,10 @@
     </style>
 </head>
 <body>
+<div id="topButtonContainer">
+    <button class="back-button" onclick="location.href='/dashboard'">На главную</button>
+</div>
+
 <h1>Сформировать отчёт по задачам</h1>
 
 <form th:action="@{/report}" method="get" class="report-form">
@@ -101,35 +120,52 @@
     <button type="submit">Сформировать отчёт</button>
 </form>
 
-<div th:if="${tasks != null}">
-    <h2>Результаты</h2>
+<div th:if="${report != null}">
+    <h2>Завершённые задачи</h2>
     <div class="table-container">
-        <table th:if="${tasks.size() > 0}">
+        <table th:if="${report.completedTasksDtos().size() > 0}">
             <thead>
             <tr>
                 <th>Название</th>
                 <th>Описание</th>
-                <th>Создана</th>
                 <th>Дедлайн</th>
-                <th>Статус</th>
-                <th>Приоритет</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="task : ${tasks}">
+            <tr th:each="task : ${report.completedTasksDtos()}">
                 <td th:text="${task.title}">Title</td>
                 <td th:text="${task.description}">Description</td>
-                <td th:text="${#temporals.format(task.createdAt, 'dd.MM.yyyy HH:mm')}">Created</td>
                 <td th:text="${#temporals.format(task.deadline, 'dd.MM.yyyy HH:mm')}">Deadline</td>
-                <td th:text="${task.status}">Status</td>
-                <td th:text="${task.priority}">Priority</td>
             </tr>
             </tbody>
         </table>
+        <p th:if="${report.completedTasksDtos().size() == 0}" style="text-align: center;">Нет завершённых задач.</p>
     </div>
-    <p th:if="${tasks.size() == 0}" style="text-align: center; color: #888; font-style: italic;">
-        Нет задач за указанный период.
-    </p>
+
+    <h2>Просроченные задачи</h2>
+    <div class="table-container">
+        <table th:if="${report.overdueTasksDtos().size() > 0}">
+            <thead>
+            <tr>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Дедлайн</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="task : ${report.overdueTasksDtos()}">
+                <td th:text="${task.title}">Title</td>
+                <td th:text="${task.description}">Description</td>
+                <td th:text="${#temporals.format(task.deadline, 'dd.MM.yyyy HH:mm')}">Deadline</td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${report.overdueTasksDtos().size() == 0}" style="text-align: center;">Нет просроченных задач.</p>
+    </div>
+</div>
+
+<div th:if="${error != null}" style="text-align: center; color: red; margin-top: 20px;">
+    <p th:text="${error}">Ошибка</p>
 </div>
 
 </body>
