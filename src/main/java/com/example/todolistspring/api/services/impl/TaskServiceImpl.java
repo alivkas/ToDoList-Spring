@@ -6,9 +6,11 @@ import com.example.todolistspring.api.exceptions.TaskNotFoundException;
 import com.example.todolistspring.api.exceptions.UserNotFoundException;
 import com.example.todolistspring.api.services.interfaces.TaskService;
 import com.example.todolistspring.mapper.TaskMapper;
+import com.example.todolistspring.store.entities.ReportEntity;
 import com.example.todolistspring.store.entities.TaskEntity;
 import com.example.todolistspring.store.entities.UserEntity;
 import com.example.todolistspring.store.enums.TaskStatus;
+import com.example.todolistspring.store.repositories.ReportRepository;
 import com.example.todolistspring.store.repositories.TaskRepository;
 import com.example.todolistspring.store.repositories.UserRepository;
 import jakarta.transaction.Transactional;
@@ -31,6 +33,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final TaskMapper taskMapper;
+    private final ReportRepository reportRepository;
 
     private final static Logger LOGGER = LoggerFactory.getLogger(TaskServiceImpl.class);
 
@@ -43,10 +46,12 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     public TaskServiceImpl(TaskRepository taskRepository,
                            TaskMapper taskMapper,
-                           UserRepository userRepository) {
+                           UserRepository userRepository,
+                           ReportRepository reportRepository) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
         this.userRepository = userRepository;
+        this.reportRepository = reportRepository;
     }
 
     @Transactional
@@ -93,6 +98,13 @@ public class TaskServiceImpl implements TaskService {
 
         if (!task.getUser().equals(currentUser)) {
             throw new NotOwnerException(currentUser.getUsername(), task.getTitle());
+        }
+
+        List<ReportEntity> reportsWithTasks = reportRepository.findByCompletedTasksContainsOrOverdueTasksContains(task, task);
+
+        for (ReportEntity report : reportsWithTasks) {
+            report.getCompletedTasks().remove(task);
+            report.getOverdueTasks().remove(task);
         }
 
         LOGGER.info("Задание {} удалено пользователем {}", task.getId(), username);
