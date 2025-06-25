@@ -31,6 +31,8 @@
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <org.mapstruct.extensions.spring.version>1.0.1</org.mapstruct.extensions.spring.version>
         <webmvc-ui.version>2.8.6</webmvc-ui.version>
+        <jrobin.version>1.5.9</jrobin.version>
+        <javamelody.version>2.3.0</javamelody.version>
     </properties>
     <dependencies>
         <dependency>
@@ -96,6 +98,18 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.bull.javamelody</groupId>
+            <artifactId>javamelody-spring-boot-starter</artifactId>
+            <version>${javamelody.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jrobin</groupId>
+            <artifactId>jrobin</artifactId>
+            <version>${jrobin.version}</version>
         </dependency>
 
         <dependency>

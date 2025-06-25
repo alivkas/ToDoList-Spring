@@ -50,6 +50,8 @@ public class SecurityConfig {
                                 "/v3/**",
                                 "/actuator",
                                 "/actuator/**",
+                                "/monitoring",
+                                "/monitoring/**",
                                 "/admin").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .formLogin(form -> form
