@@ -12,6 +12,8 @@ import com.example.todolistspring.store.entities.UserEntity;
 import com.example.todolistspring.store.repositories.TaskRepository;
 import com.example.todolistspring.store.repositories.UserRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ public class AdminServiceImpl implements AdminService {
     private final TaskRepository taskRepository;
     private final UserMapper userMapper;
     private final TaskMapper taskMapper;
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(AdminServiceImpl.class);
 
     /**
      * Внедрение UserRepository, TaskRepository, UserMapper, TaskMapper
@@ -50,6 +54,9 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<TaskDto> getAllTasks() {
         List<TaskEntity> tasks = taskRepository.findAll();
+
+        LOGGER.info("Получен список всех заданий админом");
+
         return tasks.stream()
                 .map(taskMapper::toDto)
                 .collect(Collectors.toList());
@@ -60,6 +67,8 @@ public class AdminServiceImpl implements AdminService {
         TaskEntity task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
 
+        LOGGER.info("Получено задание с id {} админом", taskId);
+
         return taskMapper.toDto(task);
     }
 
@@ -69,12 +78,17 @@ public class AdminServiceImpl implements AdminService {
         TaskEntity task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
 
+        LOGGER.info("Удалено задание с id {} админом", taskId);
+
         taskRepository.delete(task);
     }
 
     @Override
     public List<UserDto> getAllUsers() {
         List<UserEntity> users = userRepository.findAll();
+
+        LOGGER.info("Получены все пользователи админом");
+
         return users.stream()
                 .map(userMapper::toDto)
                 .collect(Collectors.toList());
@@ -85,6 +99,8 @@ public class AdminServiceImpl implements AdminService {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
 
+        LOGGER.info("Получен пользователь {} админом", user.getEmail());
+
         return userMapper.toDto(user);
     }
 
@@ -92,6 +108,8 @@ public class AdminServiceImpl implements AdminService {
     public void deleteUserByUsername(String username) {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
+
+        LOGGER.info("Удален пользователь {} админом", user.getEmail());
 
         userRepository.delete(user);
     }

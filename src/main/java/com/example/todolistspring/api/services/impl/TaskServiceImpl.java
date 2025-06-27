@@ -6,12 +6,16 @@ import com.example.todolistspring.api.exceptions.TaskNotFoundException;
 import com.example.todolistspring.api.exceptions.UserNotFoundException;
 import com.example.todolistspring.api.services.interfaces.TaskService;
 import com.example.todolistspring.mapper.TaskMapper;
+import com.example.todolistspring.store.entities.ReportEntity;
 import com.example.todolistspring.store.entities.TaskEntity;
 import com.example.todolistspring.store.entities.UserEntity;
 import com.example.todolistspring.store.enums.TaskStatus;
+import com.example.todolistspring.store.repositories.ReportRepository;
 import com.example.todolistspring.store.repositories.TaskRepository;
 import com.example.todolistspring.store.repositories.UserRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +33,9 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final TaskMapper taskMapper;
+    private final ReportRepository reportRepository;
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(TaskServiceImpl.class);
 
     /**
      * Конструктор для внедрения TaskRepository, UserRepository, TaskMapper
@@ -39,10 +46,12 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     public TaskServiceImpl(TaskRepository taskRepository,
                            TaskMapper taskMapper,
-                           UserRepository userRepository) {
+                           UserRepository userRepository,
+                           ReportRepository reportRepository) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
         this.userRepository = userRepository;
+        this.reportRepository = reportRepository;
     }
 
     @Transactional
@@ -55,6 +64,8 @@ public class TaskServiceImpl implements TaskService {
         task.setUser(currentUser);
         task.setStatus(TaskStatus.OPENED);
         task.setCreatedAt(LocalDateTime.now());
+
+        LOGGER.info("Задание {} создано пользователем {}", task.getId(), username);
 
         return taskMapper.toDto(taskRepository.save(task));
     }
@@ -70,6 +81,8 @@ public class TaskServiceImpl implements TaskService {
         if (!task.getUser().equals(currentUser)) {
             throw new NotOwnerException(currentUser.getUsername(), task.getTitle());
         }
+
+        LOGGER.info("Задание {} изменено пользователем {}", task.getId(), username);
 
         taskMapper.updateEntity(taskDto, task);
         return taskMapper.toDto(taskRepository.save(task));
@@ -87,6 +100,15 @@ public class TaskServiceImpl implements TaskService {
             throw new NotOwnerException(currentUser.getUsername(), task.getTitle());
         }
 
+        List<ReportEntity> reportsWithTasks = reportRepository.findByCompletedTasksContainsOrOverdueTasksContains(task, task);
+
+        for (ReportEntity report : reportsWithTasks) {
+            report.getCompletedTasks().remove(task);
+            report.getOverdueTasks().remove(task);
+        }
+
+        LOGGER.info("Задание {} удалено пользователем {}", task.getId(), username);
+
         taskRepository.delete(task);
     }
 
@@ -101,6 +123,8 @@ public class TaskServiceImpl implements TaskService {
             throw new NotOwnerException(currentUser.getUsername(), task.getTitle());
         }
 
+        LOGGER.info("Задание {} получено пользователем {}", task.getId(), username);
+
         return taskMapper.toDto(task);
     }
 
@@ -109,6 +133,8 @@ public class TaskServiceImpl implements TaskService {
         UserEntity currentUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
         List<TaskEntity> tasks = taskRepository.findAllByUser(currentUser);
+
+        LOGGER.info("Получены все задания пользователя {}", username);
 
         return tasks.stream()
                 .map(taskMapper::toDto)
@@ -135,6 +161,8 @@ public class TaskServiceImpl implements TaskService {
         }
 
         tasks = tasks.stream().distinct().collect(Collectors.toList());
+
+        LOGGER.info("Задания пользователя {} отфильтрованы", username);
 
         return tasks.stream().map(taskMapper::toDto).collect(Collectors.toList());
 

@@ -10,6 +10,8 @@ import com.example.todolistspring.store.enums.TaskStatus;
 import com.example.todolistspring.store.repositories.TaskRepository;
 import com.example.todolistspring.store.repositories.UserRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ public class TaskStatusServiceImpl implements TaskStatusService {
 
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(TaskStatusServiceImpl.class);
 
     /**
      * Внедрение TaskRepository, UserRepository
@@ -48,6 +52,10 @@ public class TaskStatusServiceImpl implements TaskStatusService {
             if (shouldUpdate(openedTask.getDeadline())) {
                 openedTask.setStatus(TaskStatus.OVERDUE);
                 taskRepository.save(openedTask);
+
+                LOGGER.info("Статус задания {} изменен на {}",
+                        openedTask.getId(),
+                        openedTask.getStatus().name());
             }
         }
     }
@@ -65,6 +73,8 @@ public class TaskStatusServiceImpl implements TaskStatusService {
         }
         openedTask.setStatus(TaskStatus.FINISHED);
         taskRepository.save(openedTask);
+
+        LOGGER.info("Задание {} завершено", openedTask.getId());
     }
 
     /**
