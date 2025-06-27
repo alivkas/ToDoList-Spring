@@ -55,6 +55,21 @@
         #profileMenu form button:hover {
             background-color: #f0f0f0;
         }
+
+        .complete-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-left: 10px;
+        }
+
+        .complete-button:hover {
+            background-color: #388E3C;
+        }
     </style>
 </head>
 <body>
@@ -73,9 +88,11 @@
     <button onclick="showAllTasks()">Все</button>
     <button onclick="filterTasks(true)">Выполненные</button>
     <button onclick="filterTasks(false)">Невыполненные</button>
-    <input type="text" id="searchInput" placeholder="Поиск..." oninput="searchTasks()" />
+    <input type="text" id="searchInput" placeholder="Поиск..." oninput="searchTasks()"/>
     <button onclick="location.href='/task-form'">Добавить задачу</button>
-    <button onclick="location.href='/report'" style="background-color: #4CAF50; color: white; margin-left: 10px;">Отчёт</button>
+    <button onclick="location.href='/report'" style="background-color: #4CAF50; color: white; margin-left: 10px;">
+        Отчёт
+    </button>
 </div>
 
 <div id="progressContainer" style="text-align: center; margin-bottom: 20px;">
@@ -92,15 +109,20 @@
 </div>
 
 <!-- Список задач -->
-<div class="task-list">
-    <div th:each="task : ${tasks}" class="task-card">
-        <h3 th:text="${task.title}">Заголовок задачи</h3>
-        <p th:text="${task.description}">Описание задачи</p>
-        <p th:text="'Приоритет: ' + ${task.priority}"></p>
-        <p th:text="'Дедлайн: ' + ${task.deadline()}"></p>
-        <a th:href="@{/task-form(id=${task.id})}" class="edit-link">Редактировать</a>
-        <button class="delete-button" th:attr="data-id=${task.id}" onclick="confirmDelete(this)">Удалить</button>
-    </div>
+<div th:each="task : ${tasks}" class="task-card">
+    <h3 th:text="${task.title}">Заголовок задачи</h3>
+    <p th:text="${task.description}">Описание задачи</p>
+    <p th:text="'Приоритет: ' + ${task.priority}"></p>
+    <p th:text="'Дедлайн: ' + ${task.deadline()}"></p>
+    <p th:text="'Статус: ' + ${task.status}"></p>
+    <a th:href="@{/task-form(id=${task.id})}" class="edit-link">Редактировать</a>
+    <button class="delete-button" th:attr="data-id=${task.id}" onclick="confirmDelete(this)">Удалить</button>
+    <button class="complete-button"
+            th:if="${task.status.name() == 'OPENED'}"
+            th:attr="data-task-id=${task.id}"
+            onclick="completeTask(this)">
+        Завершить
+    </button>
 </div>
 
 <script>
@@ -158,10 +180,31 @@
 
         fetch('/delete-task', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: taskId })
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({id: taskId})
         })
             .then(response => response.ok ? window.location.reload() : alert('Ошибка при удалении задачи.'));
+    }
+
+    function completeTask(button) {
+        const taskId = button.getAttribute("data-task-id");
+
+        fetch('/complete-task', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({id: taskId})
+        }).then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else if (response.ok) {
+                // Мягкое обновление без перезагрузки, если нужно
+                location.reload();
+            } else {
+                alert('Не удалось завершить задачу');
+            }
+        }).catch(() => alert('Ошибка запроса'));
     }
 </script>
 </body>
