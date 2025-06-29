@@ -7,6 +7,7 @@ import com.example.todolistspring.api.exceptions.UserNotFoundException;
 import com.example.todolistspring.mapper.TaskMapper;
 import com.example.todolistspring.store.entities.TaskEntity;
 import com.example.todolistspring.store.entities.UserEntity;
+import com.example.todolistspring.store.repositories.ReportRepository;
 import com.example.todolistspring.store.repositories.TaskRepository;
 import com.example.todolistspring.store.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +34,8 @@ class TaskServiceImplTest {
     private TaskRepository taskRepository;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private ReportRepository reportRepository;
     @Mock
     private TaskMapper taskMapper;
 
@@ -162,6 +165,8 @@ class TaskServiceImplTest {
     void deleteTask_success() {
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(userEntity));
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(taskEntity));
+        when(reportRepository.findByCompletedTasksContainsOrOverdueTasksContains(taskEntity, taskEntity))
+                .thenReturn(Collections.emptyList());
 
         taskService.deleteTask(taskId, username);
 
