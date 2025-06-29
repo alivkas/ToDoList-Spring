@@ -2,10 +2,12 @@ version: '3.8'
 
 services:
   to-do-list:
-    image: alivkas/to-do-list:3
+    image: alivkas/to-do-list:latest
     ports:
       - "8080:8080"
     env_file: .env
+    environment:
+      - TZ=Asia/Yekaterinburg
     depends_on:
       - db
     restart: unless-stopped
