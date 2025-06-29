@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   to-do-list:
-    image: alivkas/to-do-list:1
+    image: alivkas/to-do-list:3
     ports:
       - "8080:8080"
     env_file: .env

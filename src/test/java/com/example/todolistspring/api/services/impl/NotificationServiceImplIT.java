@@ -36,7 +36,7 @@ class NotificationServiceImplIT {
     void integration_sendDeadlineNotification_sendsRealEmail() throws InterruptedException {
         UserEntity user = new UserEntity();
         user.setUsername("integration-test-user");
-        user.setEmail("david_grishchenko123@mail.ru");
+        user.setEmail("mr1504dj@mail.ru");
         userRepository.save(user);
 
         TaskEntity task = new TaskEntity();

@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Реализация сервиса уведомлений
+ */
 @Service
 public class NotificationServiceImpl implements NotificationService {
 
@@ -25,7 +28,7 @@ public class NotificationServiceImpl implements NotificationService {
         this.emailServiceImpl = emailServiceImpl;
     }
 
-    @Async
+    @Async("notificationTaskExecutor")
     @Scheduled(cron = "${schedule.time.notify}")
     @Override
     public void sendDeadlineNotification() {
