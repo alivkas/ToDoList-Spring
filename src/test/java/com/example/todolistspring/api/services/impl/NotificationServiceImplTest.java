@@ -60,18 +60,18 @@ class NotificationServiceImplTest {
         notificationService.sendDeadlineNotification();
 
 
-        // Должно быть отправлено письмо только по task1 и task3 (у task2 дедлайн слишком далеко)
+        // Должно быть отправлено письмо только по task1 (у task2 дедлайн слишком далеко, task3 уже прошел)
         verify(emailServiceImpl, times(1)).sendSimpleMessage(
                 eq("user@example.com"),
                 eq("Напоминание о дедлайне задачи"),
                 contains("Task 1")
         );
-        verify(emailServiceImpl, times(1)).sendSimpleMessage(
+        verify(emailServiceImpl, never()).sendSimpleMessage(
                 eq("user@example.com"),
                 eq("Напоминание о дедлайне задачи"),
                 contains("Task 3")
         );
-        verify(emailServiceImpl, times(0)).sendSimpleMessage(
+        verify(emailServiceImpl, never()).sendSimpleMessage(
                 eq("user@example.com"),
                 eq("Напоминание о дедлайне задачи"),
                 contains("Task 2")
