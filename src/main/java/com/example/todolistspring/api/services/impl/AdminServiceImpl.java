@@ -7,8 +7,10 @@ import com.example.todolistspring.api.exceptions.UserNotFoundException;
 import com.example.todolistspring.api.services.interfaces.AdminService;
 import com.example.todolistspring.mapper.TaskMapper;
 import com.example.todolistspring.mapper.UserMapper;
+import com.example.todolistspring.store.entities.ReportEntity;
 import com.example.todolistspring.store.entities.TaskEntity;
 import com.example.todolistspring.store.entities.UserEntity;
+import com.example.todolistspring.store.repositories.ReportRepository;
 import com.example.todolistspring.store.repositories.TaskRepository;
 import com.example.todolistspring.store.repositories.UserRepository;
 import jakarta.transaction.Transactional;
@@ -30,11 +32,12 @@ public class AdminServiceImpl implements AdminService {
     private final TaskRepository taskRepository;
     private final UserMapper userMapper;
     private final TaskMapper taskMapper;
+    private final ReportRepository reportRepository;
 
     private final static Logger LOGGER = LoggerFactory.getLogger(AdminServiceImpl.class);
 
     /**
-     * Внедрение UserRepository, TaskRepository, UserMapper, TaskMapper
+     * Внедрение UserRepository, TaskRepository, UserMapper, TaskMapper, ReportRepository
      * @param userRepository репозиторий пользователя
      * @param taskRepository репозиторий задания
      * @param userMapper маппер пользователя
@@ -44,11 +47,13 @@ public class AdminServiceImpl implements AdminService {
     public AdminServiceImpl(UserRepository userRepository,
                             TaskRepository taskRepository,
                             UserMapper userMapper,
-                            TaskMapper taskMapper) {
+                            TaskMapper taskMapper,
+                            ReportRepository reportRepository) {
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
         this.userMapper = userMapper;
         this.taskMapper = taskMapper;
+        this.reportRepository = reportRepository;
     }
 
     @Override
@@ -78,9 +83,16 @@ public class AdminServiceImpl implements AdminService {
         TaskEntity task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
 
-        LOGGER.info("Удалено задание с id {} админом", taskId);
+        List<ReportEntity> reportsWithTasks = reportRepository.findByCompletedTasksContainsOrOverdueTasksContains(task, task);
+
+        for (ReportEntity report : reportsWithTasks) {
+            report.getCompletedTasks().remove(task);
+            report.getOverdueTasks().remove(task);
+        }
 
         taskRepository.delete(task);
+
+        LOGGER.info("Удалено задание с id {} админом", taskId);
     }
 
     @Override

@@ -33,9 +33,17 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void sendDeadlineNotification() {
         List<TaskEntity> tasks = taskRepository.findAll();
+        LocalDateTime now = LocalDateTime.now();
+
         tasks.stream()
-                .filter(task -> task.getDeadline() != null &&
-                        LocalDateTime.now().isAfter(task.getDeadline().minusHours(1)))
+                .filter(task -> task.getDeadline() != null)
+                .filter(task -> {
+                    LocalDateTime oneHourBeforeDeadline = task.getDeadline().minusHours(1);
+                    return now.isAfter(oneHourBeforeDeadline) &&
+                            now.isBefore(task.getDeadline()) &&
+                            (task.getLastNotificationSent() == null ||
+                                    !task.getLastNotificationSent().isAfter(oneHourBeforeDeadline));
+                })
                 .forEach(task -> {
                     if (task.getUser() == null) {
                         LOGGER.info("Пользователя для отправки уведомления нет");
@@ -49,6 +57,9 @@ public class NotificationServiceImpl implements NotificationService {
                     String subject = "Напоминание о дедлайне задачи";
                     String text = "Задача \"" + task.getTitle() + "\" скоро истекает!";
                     emailServiceImpl.sendSimpleMessage(email, subject, text);
+
+                    task.setLastNotificationSent(now);
+                    taskRepository.save(task);
                 });
     }
 }

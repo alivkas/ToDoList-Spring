@@ -36,6 +36,9 @@ public class TaskEntity extends BasicEntity {
     @Column(name = "deadline")
     private LocalDateTime deadline;
 
+    @Column(name = "last_notification_date")
+    private LocalDateTime lastNotificationSent;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
@@ -237,5 +240,23 @@ public class TaskEntity extends BasicEntity {
      */
     public void setDeadline(LocalDateTime deadline) {
         this.deadline = deadline;
+    }
+
+    /**
+     * Получить последнюю дату уведомления
+     *
+     * @return последняя дата уведомления
+     */
+    public LocalDateTime getLastNotificationSent() {
+        return lastNotificationSent;
+    }
+
+    /**
+     * Установить последнюю дату уведомления
+     *
+     * @param lastNotificationSent последняя дата уведомления
+     */
+    public void setLastNotificationSent(LocalDateTime lastNotificationSent) {
+        this.lastNotificationSent = lastNotificationSent;
     }
 }
